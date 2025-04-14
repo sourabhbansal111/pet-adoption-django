@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}PetCare{% endblock %}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("{% static 'images/verifyemail.png' %}") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      background: rgba(128, 0, 128, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 8px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .logo-brand {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .logo-brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .logo-brand .brand {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .email {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      display: inline-block;
+      color: #fff;
+    }
+
+    .paw-print {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      background: url("{% static 'images/paw.png' %}") no-repeat center center;
+      background-size: contain;
+      animation: fadePaw 5s ease-out forwards;
+      z-index: 1;
+      pointer-events: none;
+    }
+    button {
+      background: linear-gradient(135deg, #a64cf2, #6a0dad);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(166, 76, 242, 0.4);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #6a0dad, #a64cf2);
+      box-shadow: 0 6px 25px rgba(166, 76, 242, 0.7);
+    }
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 25px 0;
+    }
+
+    .otp-inputs input {
+      width: 45px;
+      height: 55px;
+      text-align: center;
+      font-size: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .otp-inputs input:focus {
+      border-color: #ffffff;
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .timer-text {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #f5c6cb;
+      border-radius: 5px;
+      font-size: 14px;
+      display: none;
+    }
+    @keyframes fadePaw {
+      0% { transform: scale(0.8) translateY(0); opacity: 1; }
+      100% { transform: scale(1.2) translateY(-200px); opacity: 0; }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    </style>
+    {% block style %}{% endblock %}
+</head>
+<body>
+  <div class="container">
+    <div class="logo-brand">
+      <img src="{% static 'images/logo.jpg' %}" alt="PetCare Logo" />
+      <div class="brand">PetCare</div>
+    </div>
+    {% if user.email %}
+        <div class="email">{{ user.email }}</div>
+        <div id="username">as username <strong>{{ user.username }}</strong></div>
+    {% else %}
+        {% if request.session.reset_email %}
+            <div class="email">{{ request.session.reset_email }}</div>
+        {% endif %}
+    {% endif %}
+
+
+    {% block content %}
+    
+    {% endblock %}
+  </div>
+
+  <script>
+    function createPawPrint() {
+      const paw = document.createElement('div');
+      paw.classList.add('paw-print');
+      paw.style.left = `${Math.random() * 100}vw`;
+      paw.style.bottom = '0px';
+      document.body.appendChild(paw);
+      setTimeout(() => paw.remove(), 3000);
+    }
+
+    let pawCount = 0;
+    const pawInterval = setInterval(() => {
+      createPawPrint();
+    //   pawCount++;
+      if (pawCount >= 15) clearInterval(pawInterval);
+    }, 300);
+  </script>
+
+  {% block scripts %}{% endblock %}
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 250px;
+      max-width: 350px;
+      background-color: #6b32e4;
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-weight: 500;
+      font-size: 14px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: opacity 0.5s ease;
+      animation: fadeOut 0.5s ease 7s forwards;
+    ">
+      {{ message }}
+    
+    </div>
+  {% endfor %}
+{% endif %}
+</body>
+</html>

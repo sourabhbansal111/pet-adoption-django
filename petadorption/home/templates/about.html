@@ -1,0 +1,388 @@
+{% extends 'base.html' %} 
+{% block style %}
+  
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    position: relative;
+  }
+  
+  .hero-section {
+    display: flex;
+    gap: 6rem;
+    align-items: flex-start;
+    margin-bottom: 6rem;
+    position: relative;
+  }
+  
+  .hero-image-container {
+    flex: 0.85;
+    position: relative;
+  }
+  
+  .hero-image-container::before {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: #f3e8ff;
+    border-radius: 50%;
+    right: -40px;
+    top: -40px;
+    z-index: -1;
+  }
+  
+  .hero-image {
+    width: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .hero-content {
+    flex: 1;
+    padding-top: 1rem;
+  }
+  
+  .subtitle {
+    color: #7c3aed;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+  
+  h1 {
+    font-size: 2.75rem;
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  .hero-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .services {
+    margin: 1.5rem 0;
+  }
+  
+  .services a {
+    color: #f97316;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .services a:hover {
+    text-decoration: underline;
+  }
+
+  .find-location {
+    display: inline-block;
+    background: #f3e8ff;
+    color: #7c3aed;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  .find-location:hover {
+    background: #ede9fe;
+  }
+  
+  .employee-owned {
+    background: linear-gradient(
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.9)
+      ),
+      url("/api/placeholder/1200/400");
+      background-size: cover;
+      text-align: center;
+      padding: 2rem;
+      /* margin-top: 2rem; */
+  }
+
+  .eo-badge {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 2rem;
+    opacity: 0.9;
+  }
+  
+  h2 {
+    font-size: 2.25rem;
+    color: #4b5563;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .employee-owned p {
+    max-width: 900px;
+    margin: 1rem auto;
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .employee-owned p:last-child {
+    font-size: 0.95rem;
+    color: #777;
+    margin-top: 0.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .hero-section {
+      flex-direction: column;
+      gap: 3rem;
+    }
+    
+    .hero-image-container {
+      width: 100%;
+    }
+    
+    h1,
+    h2 {
+      font-size: 2rem;
+    }
+  }
+  .hero-image {
+    width: 100%;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  /* --------------------------------------- */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin-top: 100px;
+    padding: 2rem;
+  }
+  
+  .feature-section {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-bottom: 4rem;
+    position: relative;
+  }
+  
+  .image-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+  }
+  
+  .circle-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .decorative-circle {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .purple-circle {
+    background-color: #f3f0f6;
+    top: -20px;
+    right: -20px;
+  }
+  
+  .yellow-circle {
+    background-color: #fdf6e3;
+    bottom: -20px;
+    left: -20px;
+  }
+  
+  .content {
+    flex: 1;
+  }
+  
+  h2 {
+    color: #4a4a4a;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .find-location-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #f3f0f6;
+    color: #666;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+  }
+  
+  .find-location-btn:hover {
+    background-color: #e5e0e9;
+  }
+  
+  @media (max-width: 768px) {
+    .feature-section {
+      flex-direction: column;
+      gap: 2rem;
+      text-align: center;
+    }
+    
+    .image-container {
+      width: 300px;
+      height: 300px;
+    }
+  }
+  /* ----------------------------------- */
+</style>
+{% endblock %}
+{% block content %}
+
+<body>
+  <div class="container">
+    <div class="hero-section" style="margin-bottom: 10px;">
+      <div class="hero-image-container">
+        <img
+        src="https://goofytails.com/cdn/shop/files/labrador-retriever_1000x.jpg?v=1701077639"
+        alt="Pet care professional with dogs"
+        class="hero-image"
+        />
+      </div>
+      <div class="hero-content">
+        <div class="subtitle">ABOUT BEST FRIENDS</div>
+        <h1>Our Difference</h1>
+        
+        <p>
+          Best Friends is the country's first and longest running Play & Stay
+          pet destination, with more than 40 locations nationwide (and growing),
+          including Walt Disney World Resort.
+        </p>
+        
+        <div class="services">
+          <p>
+            We offer an array of best-in-class pet care services all under one
+            roof. Our core services are <a href="#">Boarding</a> (for the furry
+            and feathered alike), <a href="#">Doggy Day Camp</a>, and
+            <a href="#">Grooming</a>. We also offer
+            <a href="#">Puppy Play Group</a>, <a href="#">Training</a>,
+            <a href="#">Vet Clinics</a>, and <a href="#">Transport</a> services
+            at select locations.
+          </p>
+        </div>
+
+        <p>
+          Our mission from day one was to raise the bar for pet care, and we
+          take pride in being industry innovators to this day. From the moment a
+          pet walks through our doors, we get to know them as a unique
+          individual and welcome them into our tight-knit circle of friends.
+        </p>
+
+        <a href="#" class="find-location">FIND A LOCATION</a>
+      </div>
+    </div>
+
+    <div class="employee-owned">
+      <img
+        src="../static/images/logo.jpg"
+        alt="Employee Owned Badge"
+        class="eo-badge"
+        style="height: 300px; width: 300px;"
+      />
+      <h2>We don't just work here. We own the place.</h2>
+      <p>
+        As an employee-owned company, we are invested in making Best Friends an
+        incredible business. We take extra pride in caring for our facilities,
+        for each other, and — most importantly — for pets.
+      </p>
+      <p>
+        Employee ownership means happier pets, pet parents, and team members.
+      </p>
+    </div>
+  </div>
+
+  <!-- --------------------------------------------------------------- -->
+  <div class="container">
+    <!-- First Section -->
+    <section class="feature-section">
+      <div class="image-container">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN2z0ERwXQUqH29urPuzWueLXKhJAY6SMyAA&s"
+          alt="White cockatiel in cage"
+          class="circle-image"
+        />
+        <div class="decorative-circle purple-circle"></div>
+        <div class="decorative-circle yellow-circle"></div>
+      </div>
+      <div class="content">
+        <h2>We care for the furry and feathered alike.</h2>
+        <p>
+          Whether you're the proud owner of a pug, cat, parrot or pocket pig,
+          we're the village you need to help care for them. Most of our 40+
+          locations nationwide welcome pet guests of different kinds.
+        </p>
+        <a href="#" class="find-location-btn">FIND A LOCATION</a>
+      </div>
+    </section>
+
+    <!-- Second Section -->
+    <section class="feature-section">
+      <div class="image-container">
+        <img
+          src="https://bowwowinsurance.com.au/wp-content/uploads/2018/10/shutterstock_282761690-ed-cute-pomeranian-dog-portrait-at-home-puppy..jpeg"
+          alt="Two dogs sitting together"
+          class="circle-image"
+        />
+        <div class="decorative-circle purple-circle"></div>
+        <div class="decorative-circle yellow-circle"></div>
+      </div>
+      <div class="content">
+        <h2>
+          We sweat the details and tailor experiences to every pet's idea of
+          perfect.
+        </h2>
+        <p>
+          It's the little things that make experiences worthwhile and keep
+          guests coming back. That's why we listen carefully to our pet parents
+          and answer every question.
+        </p>
+        <p>
+          We add personal touches according to our pet guests' quirks and
+          preferences. Every pet's experience here can be designed just the way
+          they like it. Pet parents can choose from an extensive menu of add-ons
+          including extra cuddles, bedtime stories, even a little pampering. Our
+          accommodations are luxe and always crate free.
+        </p>
+      </div>
+    </section>
+  </div>
+  {% endblock %}
+</body>

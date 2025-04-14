@@ -1,0 +1,813 @@
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapse4"
+    >
+      requests
+    </button>
+  </h2>
+  <div id="collapse4" class="accordion-collapse collapse">
+    <div class="accordion-body">
+      <form action="/update_status" method="POST">
+        <div class="button-container">
+          <div>
+            <button class="bn" type="button" onclick="showSection('All')">
+              All
+            </button>
+            <button class="bn" type="button" onclick="showSection('notViewed')">
+              Not Viewed
+            </button>
+            <button class="bn" type="button" onclick="showSection('accepted')">
+              Accepted
+            </button>
+            <button class="bn" type="button" onclick="showSection('declined')">
+              Declined
+            </button>
+          </div>
+          <div>
+            <button
+              id="approveBtn"
+              class="control-btn approve-btn"
+              type="submit"
+              name="status"
+              value="A"
+              disabled
+            >
+              Accept
+            </button>
+            <button
+              id="rejectBtn"
+              class="control-btn reject-btn"
+              type="submit"
+              name="status"
+              value="D"
+              disabled
+            >
+              Decline
+            </button>
+
+            <button
+              id="delc"
+              class="control-btn delc-btn"
+              type="submit"
+              value="del"
+              name="status"
+              disabled
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+
+
+
+
+        <!-- Content Sections -->
+        <div id="All" class="content-box active">
+          {% if contacts %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Pet Name</th>
+                <th>Pet id</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for contact in contacts %}
+              <tr>
+                <td>
+                  {% if contact.status[0] == "A" %}
+                  <span class="status-icon accepted"
+                    ><i class="fa-solid fa-check-circle"></i
+                  ></span>
+                  {% elif contact.status == "NV" %}
+                  <span class="status-icon not-viewed"
+                    ><i class="fa-solid fa-question-circle"></i
+                  ></span>
+                  {% else %}
+                  <span class="status-icon declined"
+                    ><i class="fa-solid fa-times-circle"></i
+                  ></span>
+                  {% endif %}
+                </td>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.firstname }}</td>
+                <td>{{ contact.lastname }}</td>
+                <td>{{ contact.petname }}</td>
+                <td>{{ contact.petid }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.number }}</td>
+                <td>{{ contact.location }}</td>
+                <td>{{ contact.message }}</td>
+                
+
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      class="selection-checkbox"
+                      name="con_ids"
+                      value="{{ contact.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          {% else %}
+          <h2>NO Requests</h2>
+          {% endif %}
+        </div>
+
+        <div id="notViewed" class="content-box">
+          {% if contacts %} {% set ns = namespace(has_a=False) %} {% for contact
+          in contacts %} {% if contact.status == 'NV' %} {% set ns.has_a =
+          True%} {% endif %} {% endfor %} {% if ns.has_a==True %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Pet Name</th>
+                <th>Pet id</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for contact in contacts %} {% if contact.status == "NV" %}
+              <tr>
+                <td>
+                  <span class="status-icon not-viewed"
+                    ><i class="fa-solid fa-question-circle"></i
+                  ></span>
+                </td>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.firstname }}</td>
+                <td>{{ contact.lastname }}</td>
+                <td>{{ contact.petname }}</td>
+                <td>{{ contact.petid }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.number }}</td>
+                <td>{{ contact.location }}</td>
+                <td>{{ contact.message }}</td>
+                
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      class="selection-checkbox"
+                      name="con_ids"
+                      value="{{ contact.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endif %} {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <h2>NO PENDING REQUEST</h2>
+          {% endif %} {% else %}
+          <h2>NO Requests</h2>
+          {% endif %}
+        </div>
+
+        <div id="accepted" class="content-box">
+          {% if contacts %} {% set ns = namespace(has_a=False) %} {% for contact
+          in contacts %} {% if contact.status[0] == 'A' %} {% set ns.has_a =
+          True%} {% endif %} {% endfor %} {% if ns.has_a==True %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Pet Name</th>
+                <th>Pet id</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for contact in contacts %} {% if contact.status[0] == "A" %}
+              <tr>
+                <td>
+                  <span class="status-icon accepted"
+                    ><i class="fa-solid fa-check-circle"></i
+                  ></span>
+                </td>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.firstname }}</td>
+                <td>{{ contact.lastname }}</td>
+                <td>{{ contact.petname }}</td>
+                <td>{{ contact.petid }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.number }}</td>
+                <td>{{ contact.location }}</td>
+                <td>{{ contact.message }}</td>
+                
+                  
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      class="selection-checkbox"
+                      name="con_ids"
+                      value="{{ contact.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endif %} {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <h2>NO ACCEPTED REQUEST</h2>
+          {% endif %} {% else %}
+          <h2>NO Requests</h2>
+          {% endif %}
+        </div>
+
+        <div id="declined" class="content-box">
+          {% if contacts %} {% set ns = namespace(has_a=False) %} {% for contact
+          in contacts %} {% if contact.status[0] == 'D' %} {% set ns.has_a =
+          True%} {% endif %} {% endfor %} {% if ns.has_a==True %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Pet Name</th>
+                <th>Pet id</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for contact in contacts %} {% if contact.status[0] == "D" %}
+              <tr>
+                <td>
+                  <span class="status-icon declined"
+                    ><i class="fa-solid fa-times-circle"></i
+                  ></span>
+                </td>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.firstname }}</td>
+                <td>{{ contact.lastname }}</td>
+                <td>{{ contact.petname }}</td>
+                <td>{{ contact.petid }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.number }}</td>
+                <td>{{ contact.location }}</td>
+                <td>{{ contact.message }}</td>
+                
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      class="selection-checkbox"
+                      name="con_ids"
+                      value="{{ contact.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endif %} {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <h2>NO DECLINED REQUEST</h2>
+          {% endif %} {% else %}
+          <h2>NO Requests</h2>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--five item -->
+
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapse5"
+    >
+      letters
+    </button>
+  </h2>
+  <div id="collapse5" class="accordion-collapse collapse">
+    <div class="accordion-body">
+      <form action="/update_status_letter" method="POST">
+        <div class="letter-button-container">
+          <div>
+            <button
+              class="bnl"
+              type="button"
+              onclick="showLetterSection('letterAll')"
+            >
+              All
+            </button>
+            <button
+              class="bnl"
+              type="button"
+              onclick="showLetterSection('letterViewed')"
+            >
+              Viewed
+            </button>
+            <button
+              class="bnl"
+              type="button"
+              onclick="showLetterSection('letterNotViewed')"
+            >
+              Not Viewed
+            </button>
+          </div>
+          <div>
+            <button
+              id="markreadbtn"
+              class="control-btn mark-read-btn"
+              type="submit"
+              name="status"
+              value="R"
+              disabled
+            >
+              Mark as Read
+            </button>
+            <button
+              id="dell"
+              class="control-btn dell-btn"
+              type="submit"
+              value="del"
+              name="status"
+              disabled
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Letter Content Sections -->
+        <div id="letterAll" class="letter-content-box active">
+          {% if letters %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for letter in letters %}
+              <tr>
+                <td>
+                  {% if letter.status == "NR" %}
+                  <div class="empty-box"></div>
+                  {% else %}
+                  <div class="checked-box"></div>
+                  {% endif %}
+                </td>
+                <td>{{ letter.id }}</td>
+                <td>{{ letter.firstname }}</td>
+                <td>{{ letter.email }}</td>
+                <td>{{ letter.number }}</td>
+                <td>{{ letter.location }}</td>
+                <td>{{ letter.message }}</td>
+
+                
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      id="readbtn"
+                      type="checkbox"
+                      class="selection-checkbox-letter"
+                      name="lett_ids"
+                      value="{{ letter.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          {% else %}
+          <h2>NO LETTER</h2>
+          {% endif %}
+        </div>
+
+        <div id="letterViewed" class="letter-content-box">
+          {% if letters %} 
+          {% set ns2 = namespace(has_b=False) %} 
+          {% for letter in letters %} 
+          {% if letter.status == 'R' %} 
+          {% set ns2.has_b = True%}
+          {% endif %} 
+          {% endfor %} 
+          {% if ns2.has_b==True %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for letter in letters %}
+              {% if letter.status == "R" %}
+              <tr>
+                <td>
+                  <div class="checked-box"></div>
+                 
+                </td>
+                <td>{{ letter.id }}</td>
+                <td>{{ letter.firstname }}</td>
+                <td>{{ letter.email }}</td>
+                <td>{{ letter.number }}</td>
+                <td>{{ letter.location }}</td>
+                <td>{{ letter.message }}</td>
+                
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      id="readbtn"
+                      type="checkbox"
+                      class="selection-checkbox-letter"
+                      name="lett_ids"
+                      value="{{ letter.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <h2>NO VIEWED LETTERS</h2>
+          {% endif %} {% else %}
+          <h2>NO LETTER</h2>
+          {% endif %}
+        </div>
+
+        <div id="letterNotViewed" class="letter-content-box">
+          {% if letters %} 
+          {% set ns2 = namespace(has_b=False) %} 
+          {% for letter in letters %} 
+          {% if letter.status == 'NR' %} 
+          {% set ns2.has_b = True%}
+          {% endif %} 
+          {% endfor %} 
+          {% if ns2.has_b==True %}
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Message</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for letter in letters %}
+              {% if letter.status == "NR" %}
+              <tr>
+                <td>
+                  <div class="empty-box"></div>
+                 
+                </td>
+                <td>{{ letter.id }}</td>
+                <td>{{ letter.firstname }}</td>
+                <td>{{ letter.email }}</td>
+                <td>{{ letter.number }}</td>
+                <td>{{ letter.location }}</td>
+                <td>{{ letter.message }}</td>
+                
+                <td>
+                  <form
+                    action="{{ url_for('deleteletter',id=letter.id) }}"
+                    method="POST"
+                  >
+                    <input
+                    type="hidden"
+                    name="extra_data"
+                      value="another_value"
+                      />
+                      <button
+                      type="submit"
+                      style="
+                        border: none;
+                        background: none;
+                        color: red;
+                        cursor: pointer;
+                        "
+                    >
+                    Delete
+                    </button>
+                  </form>
+                </td>
+                <td style="padding: 10px; text-align: center">
+                  <label
+                    style="
+                      display: inline-block;
+                      width: 24px;
+                      height: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      id="readbtn"
+                      type="checkbox"
+                      class="selection-checkbox-letter"
+                      name="lett_ids"
+                      value="{{ letter.id }}"
+                      style="
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        position: relative;
+                      "
+                    />
+                  </label>
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <h2>NO PENDING LETTERS</h2>
+          {% endif %} {% else %}
+          <h2>NO LETTER</h2>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- sixth  -->
+
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapse6"
+    >
+     Add Pet
+    </button>
+  </h2>
+  <div id="collapse6" class="accordion-collapse collapse">
+    <div class="accordion-body">
+<form method="POST" enctype="multipart/form-data" action="blog" class="form">
+    <label>PET ID:</label>
+    
+    <input type="number" name="id" id="idInput" required oninput="checkID()" />
+    <div id="warningBox" style="display: none;">
+        <div class="warning-box">
+            ID already exists!
+            <div class="arrow-down"></div>
+        </div>
+    </div>
+    <br>
+    
+    <label style="margin-top: 20px;">PET Photo:</label>
+    <input type="file" name="photo" accept="image/*" required onchange="previewImage(event)"><br>
+    <img id="imagePreview" class="preview" style="display:none;"><br>
+    <label>PET NAME</label>
+    <input type="text" name="heading" required><br>
+    <label>PET DISCRIPTION: </label>
+    <textarea name="heading_explanation" required></textarea><br>
+    <div id="subheading-container"></div>
+    <button type="button" class=" btn btn-primary" onclick="addSubheadingField()">Add Subheading</button><br>
+    <button type="submit" class=" btn btn-primary" id="submitButton">Submit</button>
+  </form>
+
+    </div>
+  </div>
+</div>
+
+<!--  seventh -->
+
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapse7"
+    >
+     delete Pet from blog
+    </button>
+  </h2>
+  <div id="collapse7" class="accordion-collapse collapse">
+    <div class="accordion-body">
+
+      <form action="blogdelete" method="POST" class="form" >
+        <label for="input2">Enter Blog ID to Delete:</label>
+        <input type="number" name="blog_id" required id="input2" oninput="checkIDdel()">
+        <div id="warningBox2" style="display: none;">
+          <div class="warning-box">
+              ID Not exists!
+          </div>
+        </div>
+        <br>
+        <button type="submit" id="submitbtn2" class=" btn btn-primary">Delete Blog</button>
+      </form> 
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function previewImage(event) {
+      let preview = document.getElementById("imagePreview");
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.style.display = "block";
+  }
+
+  function addSubheadingField() {
+      let container = document.getElementById("subheading-container");
+      let lastSubheading = container.lastElementChild;
+      
+      if (!lastSubheading || (lastSubheading.querySelector("input").value.trim() && lastSubheading.querySelector("textarea").value.trim())) {
+          let subheadingDiv = document.createElement("div");
+          subheadingDiv.classList.add("subheading-group");
+          
+          let subheading = document.createElement("input");
+          subheading.type = "text";
+          subheading.name = "subheading[]";
+          subheading.placeholder = "Subheading";
+          
+          let explanation = document.createElement("textarea");
+          explanation.name = "explanation[]";
+          explanation.placeholder = "Explanation";
+          
+          subheadingDiv.appendChild(subheading);
+          subheadingDiv.appendChild(explanation);
+          container.appendChild(subheadingDiv);
+      }
+  }
+
+const existingIDs = JSON.parse('{{ existing_ids | tojson | safe }}');
+
+
+function checkID() {
+  let inputField = document.getElementById("idInput");
+  let submitButton = document.getElementById("submitButton");
+  let warningBox = document.getElementById("warningBox");
+  
+  if (existingIDs.includes(parseInt(inputField.value))) {
+      warningBox.style.display = "inline-block";
+      submitButton.disabled = true; // Disable button
+  } else {
+      warningBox.style.display = "none";
+      submitButton.disabled = false; // Enable button
+  }
+}
+
+function checkIDdel() {
+  let inputField2 = document.getElementById("input2");
+  let submitButton2 = document.getElementById("submitbtn2");
+  let warningbox2 = document.getElementById("warningBox2");
+  
+  if (existingIDs.includes(parseInt(inputField2.value))) {
+      warningbox2.style.display = "none";
+      submitButton2.disabled = false; // Disable button
+  } else {
+      warningbox2.style.display = "inline-block";
+      submitButton2.disabled = true; // Enable button
+  }
+}
+</script>

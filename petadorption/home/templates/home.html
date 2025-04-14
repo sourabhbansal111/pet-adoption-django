@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block style %}
+    <style>
+                .services {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+            background-color: #F5F5F5;
+        }
+
+        .services>div:nth-of-type(1) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 50px 150px 0 150px;
+        }
+
+        .services>div:nth-of-type(1)>h1 {
+            font-size: 40px;
+            margin: 10px 0;
+            color: rgba(0, 0, 0, 0.81);
+        }
+
+        .services>div:nth-of-type(1)>p {
+            font-size: 22px;
+            margin: 10px 0;
+            color: rgba(0, 0, 0, 0.599);
+        }
+
+        .services>div:nth-of-type(2) {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            align-items: center;
+            padding: 50px 0;
+            width: 100%;
+        }
+
+        .services>div:nth-of-type(2)>div {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            align-items: center;
+            width: 25%;
+        }
+
+        .services>div:nth-of-type(2)>div>div {
+            position: relative;
+            border-radius: 100px;
+            width: 220px;
+            height: 220px;
+            margin-bottom: 20px;
+            z-index: 0;
+        }
+
+        .services>div:nth-of-type(2)>div>div>img {
+            z-index: 1;
+            position: relative;
+            height: 220px !important;
+            width: 220px !important;
+            object-fit: cover !important;
+            border-radius: 100%;
+        }
+
+        .services>div:nth-of-type(2)>div>div::before {
+            content: '';
+            background: #FCF3CD;
+            opacity: 0.75;
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 100px;
+            bottom: 0;
+            left: -20px;
+            z-index: index -1;
+        }
+
+        .services>div:nth-of-type(2)>div>div::after {
+            content: '';
+            background: #835997;
+            opacity: 0.5;
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 100px;
+            top: -10;
+            right: -50px;
+            z-index: index -1;
+        }
+
+        .services>div:nth-of-type(2)>div>h3 {
+            font-size: 34px;
+            font-family: "Cabin", sans-serif;
+            margin-bottom: 10px;
+            color: #835997;
+        }
+
+        .services>div:nth-of-type(2)>div>p {
+            font-size: 21px;
+            font-family: "Cabin", sans-serif;
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .clo {
+        display: block;
+      }
+      header {
+        height: 500px;
+      }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="services">
+    <div>
+        <h1>Our Services. All under one roof.</h1>
+
+        <p>All of our services are provided by a professionally trained, caring staff who are passionate about
+            caring
+            for your pet. We offer top-notch Boarding, Daycare, Grooming, and more - all under one roof! Puppy Play
+            Group, Training, and Vet Clinics are
+            offered at select locations.</p>
+    </div>
+    <div>
+        <div>
+            <div>
+                <img src="/static/images/home_div_1.jpeg" alt="">
+            </div>
+            <h3>DOGGY DAY CAMP</h3>
+            <p>Our commitment program for our local dogs to enjoy safe, supervised, social play with certified Doggy
+                Day Camp Counselors. *Interview Required*</p>
+        </div>
+        <div>
+            <div>
+                <img src="/static/images/home_div_2.jpeg" alt="">
+            </div>
+            <h3>PUPPY PLAY GROUP</h3>
+            <p>Our daycare program for our local puppies to have fun, socialize, learn manners, and more. Preps your
+                fur baby for successful adulthood and our Doggy Day Camp.</p>
+        </div>
+        <div>
+            <div>
+                <img src="/static/images/home_div_3.jpeg" alt="">
+            </div>
+            <h3>GROOMING</h3>
+            <p>From a bath to a full day of pampering, our groomers will make your pet "paw" sitively gorgeous!</p>
+        </div>
+        <div>
+            <div>
+                <img src="/static/images/home_div_4.jpeg" alt="">
+            </div>
+            <h3>TRAINING</h3>
+            <p>Our professional dog trainers make learning fun, using positive reinforcement to expand your pup's
+                repertoire of skills.</p>
+        </div>
+        <div>
+            <div>
+                <img src="/static/images/home_div_5.jpeg" alt="">
+            </div>
+            <h3>VET CLINICS</h3>
+            <p>Through our partnership with VIP Petcare, we conveniently offer vaccination and wellness clinics at
+                your local Best Friends.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

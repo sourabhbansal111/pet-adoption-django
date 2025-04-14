@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Verified - PetCare</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("{% static 'images/verifyemail.png' %}") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      animation: bodyFade 1.2s ease-in-out;
+    }
+
+    @keyframes bodyFade {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .container {
+      background: rgba(128, 0, 128, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(18px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 8px 60px rgba(0, 0, 0, 0.4);
+      position: relative;
+      animation: slideUp 1s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo-brand {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease 0.3s forwards;
+      opacity: 0;
+    }
+
+    .logo-brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      animation: bounce 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .logo-brand .brand {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .check-icon {
+      font-size: 64px;
+      color: #4CAF50;
+      margin-top: 10px;
+      animation: popIn 0.8s ease-in-out forwards;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+
+    h2 {
+      color: white;
+      margin-top: 20px;
+      font-size: 28px;
+      animation: fadeIn 1s ease 0.6s forwards;
+      opacity: 0;
+    }
+
+    p {
+      color: #e0e0e0;
+      margin: 10px 0 25px;
+      font-size: 16px;
+      animation: fadeIn 1s ease 0.8s forwards;
+      opacity: 0;
+    }
+
+    .home-btn {
+      background: linear-gradient(135deg, #a64cf2, #6a0dad);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 22px rgba(166, 76, 242, 0.4);
+      animation: fadeIn 1s ease 1.2s forwards;
+      opacity: 0;
+    }
+
+    .home-btn:hover {
+      background: linear-gradient(135deg, #6a0dad, #a64cf2);
+      box-shadow: 0 8px 28px rgba(166, 76, 242, 0.6);
+      transform: scale(1.02);
+    }
+
+    @media screen and (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+        width: 90%;
+      }
+
+      .check-icon {
+        font-size: 52px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+    }
+    .email {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+    .paw-print {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      background: url("{% static 'images/paw.png' %}") no-repeat center center;
+      background-size: contain;
+      animation: fadePaw 5s ease-out forwards;
+      z-index: 1;
+      pointer-events: none;
+    }
+  
+    @keyframes fadePaw {
+      0% {
+        transform: scale(0.8) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.2) translateY(-200px);
+        opacity: 0;
+      }
+    }
+          
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+  </style>
+  
+</head>
+<body>
+  <div class="container">
+    <div class="logo-brand">
+      <img src="{% static 'images/logo.jpg' %}" alt="PetCare Logo" />
+      <div class="brand">PetCare</div>
+    </div>
+    <div class="email">{{ user.email }}</div>
+
+    <div class="check-icon">✅</div>
+
+    <h2>Email Verified Successfully!</h2>
+    <p>Your email has been verified. You're all set to enjoy PetCare's features.</p>
+
+    <a href="{% url 'home' %}">
+      <button class="home-btn">Go to Home</button>
+    </a><br><hr>
+    <a href="{% url 'profile' email=request.user.email %}">
+        <button class="home-btn">Go to profile</button>
+      </a>
+  </div>
+  <script>
+    function createPawPrint() {
+      const paw = document.createElement('div');
+      paw.classList.add('paw-print');
+  
+      paw.style.left = `${Math.random() * 100}vw`;
+      paw.style.bottom = '0px';
+      document.body.appendChild(paw);
+  
+      setTimeout(() => {
+        paw.remove();
+      }, 3000);
+    }
+  
+    // Create 1 paw print every 300ms, stop after 15
+    let pawCount = 0;
+    const pawInterval = setInterval(() => {
+      createPawPrint();
+    //   pawCount++;
+      if (pawCount >= 15) clearInterval(pawInterval);
+    }, 300);
+  </script>
+   {% if messages %}
+   {% for message in messages %}
+     <div class="alert alert-warning alert-dismissible fade show" role="alert" style="
+       position: fixed;
+       bottom: 20px;
+       right: 20px;
+       z-index: 9999;
+       min-width: 250px;
+       max-width: 350px;
+       background-color: #6b32e4;
+       color: #fff;
+       border: none;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+       font-weight: 500;
+       font-size: 14px;
+       padding: 12px 16px;
+       border-radius: 8px;
+       transition: opacity 0.5s ease;
+       animation: fadeOut 0.5s ease 7s forwards;
+     ">
+       {{ message }}
+       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="
+         position: absolute;
+         top: 6px;
+         right: 8px;
+         filter: invert(1);
+       ">*</button>
+     </div>
+   {% endfor %}
+ {% endif %}
+ 
+</body>
+</html>

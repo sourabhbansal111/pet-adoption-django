@@ -1,0 +1,165 @@
+{% extends 'base.html' %} {% block content %}
+<div style="margin-top: 100px">
+  <h1>Welcome Super Admin</h1>
+  <div class="accordion" id="accordionExample">
+    <!-- First Item -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseOne"
+        >
+          add admins
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse">
+        <div class="accordion-body">
+          <!--  -->
+          <form
+          class="form"
+            action="/adminregister"
+            method="post"
+            style="
+              font-size: small;
+              text-align: center;
+              max-width: 500px;
+              margin: auto;
+            "
+          >
+            <h1>ADD ADMIN</h1>
+            <div class="mb-3">
+              <label class="form-label">User Name</label>
+              <input class="form-control" name="username" />
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">
+                Email address</label
+              >
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+              />
+              <div id="emailHelp" class="form-text">
+                We'll never share your email with anyone else.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"
+                >Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword1"
+                name="password"
+              />
+            </div>
+
+            <!-- <select class="form-select fs-6" aria-label="Select Role of User" name="role"> -->
+            <!-- <option selected>Select Role of User</option> -->
+            <!-- <option value="user">user</option> -->
+            <option value="admin">admin</option>
+            <!-- </select> -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Item -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseTwo"
+        >
+          staf
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse">
+        <div class="accordion-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">name</th>
+                <th scope="col">email</th>
+                <th scope="col">fire</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for admin in admins %}
+              <tr>
+                <td>{{admin.id}}</td>
+                <td>{{admin.username}}</td>
+                <td>{{admin.email}}</td>
+                <td>
+                  <form action="{{ url_for('deletefun',id=admin.id) }}" method="POST">
+                    <input type="hidden" name="extra_data" value="another_value">
+                    <button type="submit" style="border: none; background: none; color: red; cursor: pointer;">
+                        fire
+                    </button>
+                  </form>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!--three item -->
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsethree"
+        >
+          users
+        </button>
+      </h2>
+      <div id="collapsethree" class="accordion-collapse collapse">
+        <div class="accordion-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">name</th>
+                <th scope="col">email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                  <a href="{{ url_for('deletefun',id=user.id ) }}">delete</a>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--four item -->
+    {% include "clcommon.html" %}
+  </div>
+</div>
+<link rel="stylesheet" href="{{ url_for('static', filename='clcommon.css') }}">
+<script src="{{ url_for('static', filename='clcommon.js') }}"></script>
+{% endblock %}

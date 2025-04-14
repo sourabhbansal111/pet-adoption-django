@@ -1,0 +1,59 @@
+{% extends 'b.html' %}
+{% block style %}
+  <style>
+
+    </style>
+  {% endblock %}
+
+
+  
+{% block content %}
+  
+
+  {% if show_otp_form %}
+    <h3>Enter your code</h3>
+    <p>Enter the 6-digit code we sent to <strong>{{ user.email }}</strong>.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="otp-inputs">
+        {% for i in "123456" %}
+          <input type="text" name="digit{{ i }}" maxlength="1" required oninput="this.nextElementSibling?.focus()">
+        {% endfor %}
+      </div>
+      <button type="submit" name="verify_otp">Verify</button>
+    </form>
+
+    <form method="post" id="resend-form">
+      {% csrf_token %}
+      <input type="hidden" name="send_otp" value="1" />
+      <button type="submit" id="resend-btn" disabled>Resend OTP</button>
+    </form>
+    <div class="timer-text">
+      You can resend OTP in <span id="timer">40</span> seconds
+    </div>
+    <script>
+      let timer = 40;
+      const timerDisplay = document.getElementById('timer');
+      const resendBtn = document.getElementById('resend-btn');
+
+      const countdown = setInterval(() => {
+        timer--;
+        timerDisplay.textContent = timer;
+        if (timer <= 0) {
+          clearInterval(countdown);
+          resendBtn.disabled = false;
+          document.querySelector('.timer-text').textContent = "Didn't get it? Resend the OTP.";
+        }
+      }, 1000);
+    </script>
+
+  {% else %}
+    <h3>Get a code to verify email</h3>
+    <p>We’ll send a code to <strong>{{ user.email }}</strong> to verify your email.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" name="send_otp">Send code</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

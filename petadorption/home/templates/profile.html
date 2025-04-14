@@ -1,0 +1,907 @@
+{% extends 'base.html' %} {% block style %}
+<style>
+  /* Base Styles */
+  /* body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    } */
+
+  .profile-container {
+    display: flex;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 1400px;
+    max-width: 90%;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+    height: 500px;
+    margin: 70px 0 20px 0;
+  }
+
+  .profile-picture-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 10%;
+  }
+
+  .profile-picture {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background-color: #ddd;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #888;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .profile-details {
+    text-align: center;
+    margin-left: 8%;
+  }
+
+  .profile-details h2 {
+    margin: 0 0 5px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .profile-details p {
+    margin: 0;
+    color: #777;
+  }
+
+  .logout-button {
+    background: #ff4b4b;
+    color: white;
+    border: none;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+
+  .logout-button:hover {
+    background: #ff3333;
+  }
+
+  /* Edit Profile Modal */
+  .edit-profile-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 90%;
+    max-width: 700px;
+  }
+
+  .edit-profile-modal h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #333;
+  }
+
+  .edit-profile-modal input {
+    width: 100%;
+    padding: 10px;
+    margin: 0px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .edit-profile-modal button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .edit-profile-modal button:hover {
+    background: #0056b3;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  /* Show Modal and Overlay when Targeted */
+  #edit-profile-modal:target {
+    display: block;
+  }
+
+  #edit-profile-modal:target ~ .overlay {
+    display: block;
+  }
+  #change-pass-modal:target {
+    display: block;
+  }
+
+  #change-pass-modal:target ~ .overlay {
+    display: block;
+  }
+
+  /* Close Button */
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 40px;
+    color: #333;
+    text-decoration: none;
+  }
+
+  .close-button:hover {
+    color: #ff4b4b;
+  }
+
+  /* Fullscreen Image */
+  .full-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    z-index: 100;
+  }
+
+  .full-img img {
+    height: 700px;
+    width: 700px;
+    max-width: 80%;
+    max-height: 80%;
+  }
+
+  /* When clicked (target) */
+  #expand:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  .full-img a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block; /* Make entire area clickable */
+  }
+
+  /* Close Button */
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 50px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  /*                                                    */
+  /* Button Group Container */
+  .button-group {
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Buttons & Dropdown */
+  .button-group button,
+  .dropdown-container {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: none;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .button-group button:hover,
+  .dropdown-container:hover {
+    background: linear-gradient(135deg, #0056b3, #00449e);
+    transform: translateY(-2px);
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Dropdown Styling */
+  .dropdown-container {
+    position: relative;
+    padding: 12px 20px;
+    cursor: pointer;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 180px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: left;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  .table {
+    border-collapse: separate;
+    border-spacing: 15px;
+  }
+
+  /* Dropdown Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Dropdown Menu Buttons */
+  .dropdown-menu button {
+    background: white;
+    color: #333;
+    padding: 12px 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .dropdown-menu button:hover {
+    background: #007bff;
+    color: white;
+  }
+
+  /* Content Sections */
+  .content-box {
+    display: none;
+    width: 100%;
+    padding: 25px;
+    border-radius: 10px;
+    background: white;
+    max-width: 840px;
+    margin: 20px 60px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+  }
+
+  /* Active Section */
+  .active {
+    display: block;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .button-group {
+      flex-direction: column;
+    }
+
+    .dropdown-container {
+      width: 100%;
+    }
+  }
+  .letter-button-group {
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Buttons & Dropdown */
+  .letter-button-group button,
+  .letter-dropdown-container {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: none;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .letter-button-group button:hover,
+  .letter-dropdown-container:hover {
+    background: linear-gradient(135deg, #0056b3, #00449e);
+    transform: translateY(-2px);
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Dropdown Styling */
+  .letter-dropdown-container {
+    position: relative;
+    padding: 12px 20px;
+    cursor: pointer;
+  }
+
+  .letter-dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 180px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: left;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  /* Dropdown Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Dropdown Menu Buttons */
+  .letter-dropdown-menu button {
+    background: white;
+    color: #333;
+    padding: 12px 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .letter-dropdown-menu button:hover {
+    background: #007bff;
+    color: white;
+  }
+
+  /* Content Sections */
+  .letter-content-box {
+    display: none;
+    padding: 25px;
+    border-radius: 10px;
+    width: 100%;
+    background: white;
+    max-width: 840px;
+    margin: 20px 60px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+  }
+
+  /* Active Section */
+  .letter-content-box.active {
+    display: block;
+  }
+  .status-icon i {
+    font-size: 20px; /* Adjust as needed */
+  }
+
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .letter-button-group {
+      flex-direction: column;
+    }
+
+    .letter-dropdown-container {
+      width: 100%;
+    }
+  }
+
+  /* Media Queries for Responsiveness */
+  @media (min-width: 600px) {
+    .profile-container {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .profile-picture-section {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
+
+    .profile-details {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .profile-details h2 {
+      font-size: 20px;
+    }
+
+    .profile-details p {
+      font-size: 14px;
+    }
+
+    .logout-button {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
+
+  #edit-profile-modal a {
+    color: #000 ;
+  }
+  
+</style>
+
+{% endblock %} {% block content %}
+
+<div class="profile-container">
+  <!-- Left: Profile Picture Section -->
+  <div class="profile-picture-section">
+    {% if user.profile_picture %}
+    <a href="#expand" class="profile-picture">
+      <img
+        id="profile-image"
+        src="{{ user.profile_picture.url }}"
+        alt="Profile Picture"
+      />
+     
+    </a>
+    {% else %}
+    <a href="#edit-profile-modal" class="profile-picture">
+      <span id="profile-icon">+</span>
+    </a>
+    {% endif %}
+  </div>
+  
+  <!-- Right: Profile Details -->
+  <div class="profile-details" style="font-size: xx-large; text-align: center; padding-top: 20px;">
+    <h1 id="profile-name" style="margin: 10px 0; font-size: 36px;">
+      {{ user.username|title }}
+    </h1>
+  
+    <div id="profile-info" style="
+      max-width: 700px;
+      border-radius: 15px;
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+      margin:  auto;
+      font-size: 16px;
+      padding: 30px 40px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      background: #fff;
+    ">
+  
+      <div style="display: grid; grid-template-columns: 150px auto; row-gap: 20px; column-gap: 30px; align-items: center; text-align: left;">
+  
+        <div style="font-size: 14px; color: #777;">Name:</div>
+        <div style="font-weight: 500;">{{ user.first_name|title }} {{ user.last_name|title }}</div>
+  
+        <div style="font-size: 14px; color: #777;">Email:</div>
+        <div style="font-weight: 500;">{{ user.email }}
+          {% if user.is_verified %}
+          <span title="Verified" style="font-size: 24px; color: #4CAF50; vertical-align: middle;">✔️</span>
+        {% endif %}
+        </div>
+  
+        <div style="font-size: 14px; color: #777;">Phone:</div>
+        <div style="font-weight: 500;">{{ user.phone_number }}</div>
+
+        <div style="font-size: 14px; color: #777;">Gender:</div>
+        <div style="font-weight: 500;">{{ user.gender }}</div>
+        
+        <div style="font-size: 14px; color: #777;">Date of Birth:</div>
+        <div style="font-weight: 500;">{{ user.dob|date:"F d, Y" }}</div>
+
+        <div style="font-size: 14px; color: #777;">Address:</div>
+        <div style="font-weight: 500;">{{ user.address }}</div>
+  
+        <div style="font-size: 14px; color: #777;">Joined:</div>
+        <div style="font-weight: 500;">{{ user.date_joined|date:"F d, Y" }}</div>
+  
+      </div>
+    </div>
+  
+    <a href="{% url 'logout' %}">
+      <button class="logout-button" style="
+        padding: 10px 25px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      " onmouseover="this.style.backgroundColor='#d32f2f'" onmouseout="this.style.backgroundColor='#f44336'">
+        Logout
+      </button>
+    </a>
+  </div>
+ <!-- 🛠️ Edit Profile Button -->
+ <a href="#edit-profile-modal">
+  <button
+    class="btn btn-primary"
+    style="position: absolute; top: 20%; right: 3%;
+      width: 220px;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #956fa7);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(110, 142, 251, 0.4);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+      border: 2px solid transparent;"
+    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 25px rgba(110, 142, 251, 0.6)'"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(110, 142, 251, 0.4)'">
+    🛠️ Edit Profile
+  </button>
+</a>
+
+
+<!-- ✉️ Verify Email Button -->
+
+{% if user.is_verified %}
+
+<form method="get" action="{% url 'success' user.email %}" style="position: absolute; top: 35%; right: 3%; text-align: center;">
+  {% else %}
+
+<form method="get" action="{% url 'verifyemail' user.email %}" style="position: absolute; top: 35%; right: 3%; text-align: center;">
+  
+ {% endif %}
+
+  
+  <button
+  style="
+  width: 220px;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #956fa7);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(110, 142, 251, 0.4);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  border: 2px solid transparent;"
+onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 25px rgba(110, 142, 251, 0.6)'"
+onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(110, 142, 251, 0.4)'"
+type="submit"
+>
+{% if user.is_verified %}
+
+✅ Email Verified
+
+{% else %}
+
+✉️ Verify Email
+{% endif %}
+
+</button>
+</form>
+
+
+    
+<a href="#change-pass-modal">
+  <button
+  class="btn btn-primary"
+    style="position: absolute; top: 50%; right: 3%;
+      width: 220px;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #956fa7);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(110, 142, 251, 0.4);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+      border: 2px solid transparent;"
+    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 25px rgba(110, 142, 251, 0.6)'"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(110, 142, 251, 0.4)'">
+    🔑 Change Password
+  </button>
+</a>
+
+</div>
+</div>
+<!-- Edit Profile Modal -->
+<div id="edit-profile-modal" class="edit-profile-modal">
+  <h3>Edit Profile</h3>
+  <form method="POST" enctype="multipart/form-data" action="{% url 'edit_profile' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <button type="submit">Save Changes</button>
+  </form>
+  <a href="#" class="close-button">&times;</a>
+</div>
+
+<!-- change password Modal -->
+<div id="change-pass-modal" class="edit-profile-modal">
+  <div style="
+  max-width: 400px;
+  margin: 40px auto;
+  background-color: #f9f9f9;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+">
+  <h2 style="margin-bottom: 20px; font-size: 20px; color: #333;">🔒 Change Password</h2>
+
+  <form method="POST" action="{% url 'change_password' %}">
+    {% csrf_token %}
+
+    <label style="font-weight: 500; font-size: 14px;">Old Password</label><br>
+    <input type="password" name="old_password" required style="
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    ">
+
+    <label style="font-weight: 500; font-size: 14px;">New Password</label><br>
+    <input type="password" name="new_password1" id="new_password1" required style="
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    ">
+    <div id="strengthMessage" class="strength-message"></div>
+
+    <label style="font-weight: 500; font-size: 14px;">Confirm Password</label><br>
+    <input type="password" name="new_password2" required style="
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 24px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    ">
+
+    <button type="submit" id="submitBtn" style="
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      width: 100%;
+    ">
+      🔐 Change Password
+    </button>
+  </form>
+  <a href="#" class="close-button">&times;</a>
+  <p style="margin-top: 10px; text-align: right;">
+    <a href="{% url 'forgot_password' %}" style="text-decoration: none; color: #0078d4;">
+      🔑 Forgot Password?
+    </a>
+  </p>
+  
+
+</div>
+
+</div>
+   <!-- Overlay -->
+<div class="overlay"></div>
+   {% if user.profile_picture %}
+   <div id="expand" class="full-img">
+     <a href="#" class="close-btn">&times;</a>
+     <a href="#"></a>
+     <img src="{{ user.profile_picture.url }}" alt="Expanded Photo" />
+  </div>     
+  {% endif %}
+  
+ 
+    <script>
+      
+    const passwordInput = document.getElementById("new_password1");
+    const message = document.getElementById("strengthMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+  
+    passwordInput.addEventListener("input", function () {
+    const value = passwordInput.value;
+    const simplePassword = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+    const simplePassword2 = /^.{9,}$/;
+
+
+    if (value.length === 0) {
+      message.textContent = "";
+      submitBtn.disabled = true;
+    } else if (simplePassword.test(value) || simplePassword2.test(value)) {
+      message.textContent = "Looks good 👍";
+      message.className = "strength-message valid";
+      submitBtn.disabled = false;
+    } else {
+      message.textContent = "At least 6 characters with a letter & number or 9 characters ";
+      message.className = "strength-message invalid";
+      submitBtn.disabled = true;
+    }
+  });
+    
+      function uploadProfilePicture(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const formData = new FormData();
+          formData.append("profile_picture", file);
+    
+          fetch("/upload_profile_picture", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.text())
+            .then((filePath) => {
+              document.getElementById("profile-image").style.display = "block";
+              document.getElementById("profile-image").src = filePath; // Update image preview
+              document.getElementById("profile-imagetop").src = filePath; // Update image preview
+              document.getElementById("profile-icon").style.display = "none";
+            })
+            .catch((error) => console.error("Upload failed:", error));
+        }
+      }
+    
+      // Function to show the selected content
+      function showContent(section) {
+        // Hide all content sections
+        document
+          .querySelectorAll(".content-box")
+          .forEach((div) => (div.style.display = "none"));
+    
+        // Show the selected section
+        document.getElementById(section).style.display = "block";
+    
+        // Close the dropdown menu after clicking an option
+        closeDropdown();
+      }
+    
+      // Function to toggle the dropdown menu
+      function toggleDropdown() {
+        let dropdownMenu = document.getElementById("viewedDropdownMenu");
+    
+        // Toggle between showing and hiding
+        if (dropdownMenu.style.display === "block") {
+          dropdownMenu.style.display = "none";
+        } else {
+          dropdownMenu.style.display = "block";
+        }
+      }
+    
+      // Function to close the dropdown menu
+      function closeDropdown() {
+        document.getElementById("viewedDropdownMenu").style.display = "none";
+      }
+    
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        let dropdownContainer = document.querySelector(".dropdown-container");
+        let dropdownMenu = document.getElementById("viewedDropdownMenu");
+    
+        // Close dropdown only if clicking outside the dropdown-container
+        if (!dropdownContainer.contains(event.target)) {
+          closeDropdown();
+        }
+      });
+    
+      // Prevent dropdown from closing when clicking inside it
+      document
+        .getElementById("viewedDropdownMenu")
+        .addEventListener("click", function (event) {
+          event.stopPropagation();
+        });
+      function showLetterContent(sectionId) {
+        let sections = document.querySelectorAll(".letter-content-box");
+        sections.forEach((section) => section.classList.remove("active"));
+    
+        document.getElementById(sectionId).classList.add("active");
+      }
+    
+      function toggleLetterDropdown() {
+        let dropdown = document.getElementById("viewedLetterDropdownMenu");
+        dropdown.style.display =
+          dropdown.style.display === "block" ? "none" : "block";
+      }
+    
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        let dropdown = document.getElementById("viewedLetterDropdownMenu");
+        let dropdownContainer = document.querySelector(
+          ".letter-dropdown-container"
+        );
+    
+        if (!dropdownContainer.contains(event.target)) {
+          dropdown.style.display = "none";
+        }
+      });
+    </script>
+
+  </div>    
+{% endblock %}
