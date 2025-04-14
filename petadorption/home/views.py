@@ -193,10 +193,23 @@ def profile(request,email):
 def edit_profile(request):
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+        user = Usert.objects.get(email=request.user.email)
         if form.is_valid():
-            form.save()
-            return redirect('profile' , email=request.user.email)  # or wherever you want to go after saving
-    else:
+            email_changed = form.cleaned_data['email'] != user.email
+            user = form.save(commit=False)  # Don't save yet
+
+            if email_changed:
+                user.is_verified = False
+                messages.warning(request, "Email has been changed. You need to verify your new email address.")
+            else:
+                messages.success(request, "Changes saved.")
+
+            user.save()  # Now save including is_verified
+            return redirect('profile', email=user.email)
+
+
+
+    else:   
         form = UserUpdateForm(instance=request.user)
     user_email = request.user.email
     contacts = Contact.objects.filter(email=user_email)
@@ -383,14 +396,14 @@ PetCare Inc. | 123 Paw Street | New York, NY 10001
 def contact_view(request):
     if request.method == 'POST':
         Contact.objects.create(
-            firstname=request.POST['firstname'],
-            lastname=request.POST['lastname'],
-            number=request.POST['number'],
+            username=request.POST['username'],
+            number=request.POST['phone'],
             email=request.POST['email'],
+            type=request.POST['type'],
             location=request.POST['location'],
             message=request.POST['message'],
-            petname=request.POST['petname'],
-            petid=request.POST['petid']
+            pname=request.POST['pet-name'],
+            pid=request.POST['pet-id']
         )
         messages.success(request, "Contact form submitted")
         return redirect

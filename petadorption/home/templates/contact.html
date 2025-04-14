@@ -232,6 +232,7 @@
       </div>
       <div class="for-form">
         <form method="post">
+          {% csrf_token %}
           <div class="mb-3">
             <label for="uname" class="form-label">User Name</label>
             <input
@@ -246,9 +247,9 @@
             />
           </div>
           <div class="mb-3">
-            <label for="lname" class="form-label">You Are Here For </label>
+            <label for="type" class="form-label">You Are Here For </label>
             
-            <select name="status" required style="
+            <select name="type" id="type" required style="
             padding: 8px 39%;
             border-radius: 6px;
             border: 1px solid #ccc;
@@ -256,8 +257,8 @@
             font-family: 'Segoe UI', sans-serif;
           ">
             <option value="" disabled selected>Please Select </option>
-            <option value="approved">Pet Adorption</option>
-            <option value="rejected">Pet Services</option>
+            <option value="adopt">Pet Adorption</option>
+            <option value="service">Pet Services</option>
           </select>
             
           </div>
@@ -378,6 +379,7 @@
         <div class="footer-form">
           <h3 style="color: white">A letter to store</h3>
           <form method="post" action="/letter">
+            {% csrf_token %}
             <div class="mb-3">
               <label for="firstName" class="form-label">User Name</label>
               <input

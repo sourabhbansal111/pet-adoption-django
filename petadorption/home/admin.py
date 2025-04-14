@@ -18,18 +18,22 @@ class CustomUserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email', 'first_name', 'last_name')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
 
-# @admin.register(Contact)
-# class ContactAdmin(admin.ModelAdmin):
-#     list_display = ('firstname', 'lastname', 'email', 'number', 'status')
-#     search_fields = ('firstname', 'lastname', 'email', 'petname', 'petid')
-#     list_filter = ('status',)
-admin.site.register(Contact)
 
-@admin.register(Letter)
-class LetterAdmin(admin.ModelAdmin):
-    list_display = ('firstname', 'email', 'number', 'status')
-    search_fields = ('firstname', 'email')
-    list_filter = ('status',)
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ['username', 'email', 'location', 'get_type_display', 'status']
+
+    def get_type_display(self, obj):
+        return obj.get_type_display()
+
+    get_type_display.short_description = 'Type'
+
+admin.site.register(Letter)
+# class LetterAdmin(admin.ModelAdmin):
+#     list_display = ('firstname', 'email', 'number', 'status')
+#     search_fields = ('firstname', 'email')
+#     list_filter = ('status',)
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):

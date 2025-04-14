@@ -22,14 +22,14 @@ class Usert(AbstractUser):
         return self.username
 
 class Contact(models.Model):
-    nameuser = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
     number = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     location = models.CharField(max_length=200)
     message = models.TextField(max_length=5000)
     type_CHOICES = (
-        ('pet', 'Pet Adorption'),
-        ('service', 'Pet Service'),
+        ('adopt', 'adopt'),
+        ('service', 'service'),
     )
     type=models.CharField(max_length=20,choices=type_CHOICES)
     pname = models.CharField(max_length=100)
@@ -37,7 +37,7 @@ class Contact(models.Model):
     status = models.CharField(max_length=10, default="NV")  # NV = Not Verified?
 
     def __str__(self):
-        return f"{self.firstname} {self.lastname}"
+        return f"{self.username}"
 
 class Letter(models.Model):
     firstname = models.CharField(max_length=100)
