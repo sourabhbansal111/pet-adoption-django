@@ -23,12 +23,17 @@ urlpatterns = [
 
     # Dashboard
     path('blog/', views.blog, name='blog'),
-    path('profile/<str:email>', views.profile, name='profile'),
+    path('blog/<str:blog>/', views.blog, name='blog'),
+    path('profile/<str:email>/', views.profile, name='profile'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
 
     # Contact and Letter Forms
     path('contact/', views.contact_view, name='contact'),
     path('letter/', views.letter_view, name='letter'),
+    path('deletecont/<int:id>/', views.delete_contact, name='delete_contact'),
+    path('deleteletter/<int:id>/', views.delete_letter, name='delete_letter'),
+
+
 
     # Blog
     # path('create-blog/', views.create_blog, name='create_blog'),

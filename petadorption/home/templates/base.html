@@ -165,10 +165,13 @@
         top: 100%;
         left: 48.7%;
       }
-
       .dropdown2 {
         top: 100%;
         left: 55.4%;
+      }
+      .dropdown3 {
+        top: 100%;
+        left: 74.7%;
       }
       .dropdown a {
         display: block;
@@ -190,7 +193,9 @@
       .has-dropdown1:hover + .dropdown1,
       .dropdown1:hover,
       .has-dropdown2:hover + .dropdown2,
-      .dropdown2:hover {
+      .dropdown2:hover,
+      .has-dropdown3:hover + .dropdown3,
+      .dropdown3:hover {
         display: block;
       }
 
@@ -213,15 +218,18 @@
 
       /* Keep Services & Resources slight downward effect */
       .has-dropdown1:hover,
-      .has-dropdown2:hover {
+      .has-dropdown2:hover,
+      .has-dropdown3:hover {
         transform: scale(1.2) translateY(5px);
       }
 
       /* 🔥 Fix: Parent link stays highlighted when dropdown is hovered */
       .has-dropdown1:hover,
       .has-dropdown2:hover,
+      .has-dropdown3:hover,
       .dropdown1:hover,
-      .dropdown2:hover {
+      .dropdown2:hover,
+      .dropdown3:hover{
         background: #835997; /* Keep the color change */
         color: white;
       }
@@ -242,7 +250,7 @@
         padding: auto;
       }
 
-      /* gfdhjvdfjhkflddfjkdlsfsjld---------------------------------------------------------------------------------------------------- */
+      /* footer---------------------------------------------------------------------------------------------------- */
 
       footer {
         background-color: #835997;
@@ -284,39 +292,8 @@
         margin: 10px 0;
       }
      
-  .flash-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1050;
-  }
-  .flash-message {
-    position: relative;
-    min-width: 250px;
-    max-width: 350px;
-    background-color: rgba(50, 50, 50, 0.9);
-    color: #fff;
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-top: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInOut 5s ease-in-out forwards;
-  }
-  .flash-body {
-    display: block;
-  }
-  .flash-close {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-  }
+  
+  
   @keyframes fadeInOut {
     0% {
       opacity: 0;
@@ -348,9 +325,10 @@
   }
 }
 
-        </style>
+  </style>
         
       {% block style %}
+      
      {% endblock %}
   </head>
 
@@ -360,7 +338,7 @@
       <div class="content">
         <img src="/static/images/logo.jpg" alt="Park's Paws Logo" />
         <h1 class="clo" style="color: white;">Plan your visit, we'd love to meet your pet.</h1>
-        <a class="clo" id="clo" href="">Book a Meet & Greet + Tour</a>
+        <a class="clo" id="clo" href="/admin/">Book a Meet & Greet + Tour</a>
         
 
         {% if user.username %}
@@ -425,7 +403,12 @@
         </div>
         <!-- <a href="">PETCAMS</a> -->
         <a href="{% url 'contact' %}">CONTACT</a>
-        <a href="{% url 'blog' %}">BLOG</a>
+
+        <a class="has-dropdown3 has-dropdown" id="blog">BLOG</a>
+        <div id="blogbox" class="dropdown3 dropdown">
+          <a href="{% url 'blog' blog='adopt' %}">PET ADOPTION</a>
+          <a href="{% url 'blog' blog='service' %}">PET SERVICES</a>
+        </div>
       </nav>
     </header>
 
@@ -506,6 +489,10 @@
         {
           parent: document.getElementById("res"),
           box: document.getElementById("resourcesbox"),
+        },
+        {
+          parent: document.getElementById("blog"),
+          box: document.getElementById("blogbox"),
         },
       ];
 

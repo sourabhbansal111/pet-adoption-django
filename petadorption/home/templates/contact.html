@@ -257,7 +257,7 @@
             font-family: 'Segoe UI', sans-serif;
           ">
             <option value="" disabled selected>Please Select </option>
-            <option value="adopt">Pet Adorption</option>
+            <option value="adopt">Pet Adoption</option>
             <option value="service">Pet Services</option>
           </select>
             
@@ -378,7 +378,7 @@
         <hr />
         <div class="footer-form">
           <h3 style="color: white">A letter to store</h3>
-          <form method="post" action="/letter">
+          <form method="post" action="{% url 'letter' %}">
             {% csrf_token %}
             <div class="mb-3">
               <label for="firstName" class="form-label">User Name</label>
@@ -386,7 +386,7 @@
                 type="text"
                 class="form-control"
                 id="firstName"
-                name="first-name"
+                name="username"
                 value="{{ user.username}}"
                 required
               />
@@ -412,6 +412,7 @@
                 class="form-control"
                 id="Message"
                 name="message"
+                placeholder="enter your message here--"
               />
             </div>
             <div class="mb-3">
@@ -432,6 +433,7 @@
                 class="form-control"
                 id="location1"
                 name="location"
+                placeholder="enter your location here--"
               />
             </div>
             {% if not user.is_verified %}

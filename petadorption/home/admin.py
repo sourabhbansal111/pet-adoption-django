@@ -1,6 +1,7 @@
-from django.contrib import admin
+from django.contrib import admin,messages
 from .models import Usert, Contact, Letter, Blog
 from django.contrib.auth.admin import UserAdmin
+
 
 
 # @admin.register(Profile)
@@ -22,20 +23,35 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'location', 'get_type_display', 'status']
+    list_display = ['id','username', 'email', 'location', 'type', 'status','last_updated_by']
+    search_fields = ('username', 'email','location')
+    list_filter = ('status','type')
+    readonly_fields = ['last_updated_by']
 
-    def get_type_display(self, obj):
-        return obj.get_type_display()
+    def save_model(self, request, obj, form, change):
+        obj.last_updated_by = request.user  # store who made the last change
+        super().save_model(request, obj, form, change)
 
-    get_type_display.short_description = 'Type'
+@admin.register(Letter)
+class LetterAdmin(admin.ModelAdmin):
+    list_display = ('id','username', 'email', 'number', 'status', 'last_updated_by')
+    readonly_fields = ['last_updated_by']
+    search_fields = ('username', 'email')
+    list_filter = ('status',)
 
-admin.site.register(Letter)
-# class LetterAdmin(admin.ModelAdmin):
-#     list_display = ('firstname', 'email', 'number', 'status')
-#     search_fields = ('firstname', 'email')
-#     list_filter = ('status',)
+    def save_model(self, request, obj, form, change):
+        if change:
+            original = Letter.objects.get(pk=obj.pk)
+            if original.status == 'Viewed':
+                messages.error(request, "This letter has already been viewed and cannot be changed.")
+                return  # stop save
+
+        obj.last_updated_by = request.user
+        super().save_model(request, obj, form, change)
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'pet_name', 'photo')
+    list_display = ('id', 'pet_name', 'photo','type')
     search_fields = ('pet_name',)
+    list_filter = ('type',)
+

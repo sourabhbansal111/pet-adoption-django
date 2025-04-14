@@ -24,7 +24,7 @@
     flex-direction: column;
     align-items: center;
     justify-self: center;
-    height: 500px;
+    height: 550px;
     margin: 70px 0 20px 0;
   }
 
@@ -770,20 +770,540 @@ type="submit"
 </div>
 
 </div>
-   <!-- Overlay -->
+<!-- Overlay -->
 <div class="overlay"></div>
-   {% if user.profile_picture %}
-   <div id="expand" class="full-img">
-     <a href="#" class="close-btn">&times;</a>
-     <a href="#"></a>
-     <img src="{{ user.profile_picture.url }}" alt="Expanded Photo" />
-  </div>     
-  {% endif %}
+{% if user.profile_picture %}
+<div id="expand" class="full-img">
+  <a href="#" class="close-btn">&times;</a>
+  <a href="#"></a>
+  <img src="{{ user.profile_picture.url }}" alt="Expanded Photo" />
+</div>     
+{% endif %}
+
+</div>    
+
+
+<div class="profile-container" style="height: auto; margin-top: auto">
+  <div class="button-group">
+    <button onclick="showContent('allRequests')">All</button>
+
+    <div class="dropdown-container" onclick="toggleDropdown()">
+      Viewed ▼
+      <div class="dropdown-menu" id="viewedDropdownMenu">
+        <button
+          onclick="showContent('acceptedRequests')"
+          style="background-color: rgba(44, 173, 44, 0.818)"
+        >
+          Accepted
+        </button>
+        <button
+          onclick="showContent('declinedRequests')"
+          style="background-color: red"
+        >
+          Declined
+        </button>
+      </div>
+    </div>
+
+    <button onclick="showContent('notViewedRequests')">Not Viewed</button>
+  </div>
+
+  <!-- Content Sections -->
+  <div id="allRequests" class="content-box active">
+    <div class="accordion-body">
+      {% if contacts %}
+      <table
+        class="table"
+        style="border-collapse: separate; border-spacing: 15px"
+      >
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Pet/servive Name</th>
+            <th>Pet/service id</th>
+            <th>Location</th>
+            <th>Message</th>
+            <th>Accepted /Declined By</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for contact in contacts %}
+          <tr>
+            <td>
+              {% if contact.status == "accepted" %}
+              <span class="green-bulb">
+                <i
+                  class="fa-solid fa-lightbulb"
+                  style="color: green; font-size: 24px"
+                ></i>
+              </span>
+              {% elif contact.status == "declined" %}
+              <span class="red-bulb">
+                <i
+                  class="fa-solid fa-lightbulb"
+                  style="color: red; font-size: 24px"
+                ></i>
+              </span>
+              {% elif contact.status == "pending" %}
+              <span class="unknown-bulb">
+                <i
+                  class="fa-solid fa-lightbulb"
+                  style="color: rgb(106, 100, 100); font-size: 24px"
+                ></i>
+              </span>
+              {% endif %}
+            </td>
+            <td>{{ contact.id }}</td>
+            <td>{{contact.type}}</td>
+            <td>{{ contact.pname }}</td>
+            <td>{{ contact.pid }}</td>
+            <td>{{ contact.location }}</td>
+            <td>{{ contact.message }}</td>
+            <td>{{ contact.last_updated_by|default:"--" }}</td>
+            <td>
+              <form
+              action="{% url 'delete_contact' id=contact.id %}"
+              method="POST"
+              >
+                <input type="hidden" name="extra_data" value="another_value" />
+                <button
+                  type="submit"
+                  style="
+                    border: none;
+                    background: none;
+                    color: red;
+                    cursor: pointer;
+                  "
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h1>No Requests</h1>
+      {% endif %}
+    </div>
+  </div>
+
+  <div id="acceptedRequests" class="content-box">
+    
+    {% if contacts %} {% if contacts %} {% if co.0 %}
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Pet/servive Name</th>
+            <th>Pet/service id</th>
+            <th>Location</th>
+            <th>Message</th>
+            <th>Accepted /Declined By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in contacts %} {% if contact.status == "accepted" %}
+        <tr>
+          <td>
+            <span class="green-bulb">
+              <i
+                class="fa-solid fa-lightbulb"
+                style="color: green; font-size: 24px"
+              ></i>
+            </span>
+          </td>
+          <td>{{ contact.id }}</td>
+            <td>{{contact.type}}</td>
+            <td>{{ contact.pname }}</td>
+            <td>{{ contact.pid }}</td>
+            <td>{{ contact.location }}</td>
+            <td>{{ contact.message }}</td>
+            <td>{{ contact.last_updated_by|default:"--" }}</td>
+          <td>
+            <form
+              action="{% url 'delete_contact' id=contact.id %}"
+              method="POST"
+            >
+              <input type="hidden" name="extra_data" value="another_value" />
+              <button
+                type="submit"
+                style="
+                  border: none;
+                  background: none;
+                  color: red;
+                  cursor: pointer;
+                "
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h2>NO ACCEPTED REQUEST</h2>
+    {% endif %} {% else %}
+    <h2>NO Requests</h2>
+    {% endif %}
+  </div>
+
+  <div id="declinedRequests" class="content-box">
+   {% if contacts %} {% if co.1 %}
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Pet/servive Name</th>
+            <th>Pet/service id</th>
+            <th>Location</th>
+            <th>Message</th>
+            <th>Accepted /Declined By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in contacts %} {% if contact.status == "declined" %}
+        <tr>
+          <td>
+            <span class="red-bulb">
+              <i
+                class="fa-solid fa-lightbulb"
+                style="color: red; font-size: 24px"
+              ></i>
+            </span>
+          </td>
+          <td>{{ contact.id }}</td>
+          <td>{{contact.type}}</td>
+          <td>{{ contact.pname }}</td>
+          <td>{{ contact.pid }}</td>
+          <td>{{ contact.location }}</td>
+          <td>{{ contact.message }}</td>
+          <td>{{ contact.last_updated_by|default:"--" }}</td>
+          <td>
+            <form
+              action="{% url 'delete_contact' id=contact.id %}"
+              method="POST"
+            >
+              <input type="hidden" name="extra_data" value="another_value" />
+              <button
+                type="submit"
+                style="
+                  border: none;
+                  background: none;
+                  color: red;
+                  cursor: pointer;
+                "
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h2>NO DECLINED REQUEST</h2>
+    {% endif %} {% else %}
+    <h2>NO Requests</h2>
+    {% endif %}
+  </div>
+
+  <div id="notViewedRequests" class="content-box">
+    {% if contacts %} {% if co.2 %}
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Pet/servive Name</th>
+            <th>Pet/service id</th>
+            <th>Location</th>
+            <th>Message</th>
+            <th>Accepted /Declined By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in contacts %} {% if contact.status == "pending" %}
+        <tr>
+          <td>
+            <span class="unknown-bulb">
+              <i
+                class="fa-solid fa-lightbulb"
+                style="color: rgb(106, 100, 100); font-size: 24px"
+              ></i>
+            </span>
+          </td>
+          <td>{{ contact.id }}</td>
+          <td>{{contact.type}}</td>
+          <td>{{ contact.pname }}</td>
+          <td>{{ contact.pid }}</td>
+          <td>{{ contact.location }}</td>
+          <td>{{ contact.message }}</td>
+          <td>{{ contact.last_updated_by|default:"--" }}</td>
+          <td>
+            <form
+              action="{% url 'delete_contact' id=contact.id %}"
+              method="POST"
+            >
+              <input type="hidden" name="extra_data" value="another_value" />
+              <button
+                type="submit"
+                style="
+                  border: none;
+                  background: none;
+                  color: red;
+                  cursor: pointer;
+                "
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h2>NO PENDING REQUEST</h2>
+    {% endif %} {% else %}
+    <h2>NO Requests</h2>
+    {% endif %}
+  </div>
+</div>
+
+<div class="profile-container" style="height: auto; margin-top: auto">
+  <div class="letter-button-group">
+    <button onclick="showLetterContent('allLetters')">All</button>
+
+    <button
+      class="letter-dropdown-container"
+      onclick="showLetterContent('ViewedLetters')"
+    >
+      Viewed
+    </button>
+
+    <button onclick="showLetterContent('notViewedLetters')">Not Viewed</button>
+  </div>
+
+  <!-- Content Sections -->
+  <div id="allLetters" class="letter-content-box active">
+    <div class="letter-accordion-body">
+      {% if letters %}
+      <table
+        class="letter-table"
+        style="border-collapse: separate; border-spacing: 15px; width: 100%"
+      >
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Number</th>
+            <th>Location</th>
+            <th>Message</th>
+            <th>Viewed By</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for letter in letters %}
+          <tr>
+            <td>
+              {% if letter.status == 'Viewed' %}
+
+              <span class="green-bulb">
+                <i
+                  class="fa-solid fa-lightbulb"
+                  style="color: green; font-size: 24px"
+                ></i>
+              </span>
+
+              {% else %}
+              <span class="red-bulb">
+                <i
+                  class="fa-solid fa-lightbulb"
+                  style="color: rgb(106, 100, 100); font-size: 24px"
+                ></i>
+              </span>
+              {% endif %}
+            </td>
+            <td>{{ letter.id }}</td>
+            <td>{{ letter.number }}</td>
+            <td>{{ letter.location }}</td>
+            <td style="width: 30%">{{ letter.message }}</td>
+            <td>{{letter.last_updated_by|default:"--" }}</td>
+            <td>
+              <form
+                action="{% url 'delete_letter' id=letter.id %}"
+                method="POST"
+              >
+                <input type="hidden" name="extra_data" value="another_value" />
+                <button
+                  type="submit"
+                  style="
+                    border: none;
+                    background: none;
+                    color: red;
+                    cursor: pointer;
+                  "
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h1>No Letters</h1>
+      {% endif %}
+    </div>
+  </div>
+
+  <div id="ViewedLetters" class="letter-content-box">
+    {% if contacts %} {% if co.3 %}
+    <table
+      class="letter-table"
+      style="border-collapse: separate; border-spacing: 15px; width: 100%"
+    >
+      <thead>
+        <tr>
+          <th></th>
+          <th>ID</th>
+          <th>Number</th>
+          <th>Location</th>
+          <th>Message</th>
+          <th>Viewed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for letter in letters %} {% if letter.status == 'Viewed' %}
+        <tr>
+          <td>
+            <span class="green-bulb">
+              <i
+                class="fa-solid fa-lightbulb"
+                style="color: green; font-size: 24px"
+              ></i>
+            </span>
+          </td>
+          <td>{{ letter.id }}</td>
+          <td>{{ letter.number }}</td>
+          <td>{{ letter.location }}</td>
+          <td style="width: 30%">{{ letter.message }}</td>
+          <td>{{letter.last_updated_by|default:"--" }}</td>
+          <td>
+            <form
+              action="{% url 'delete_letter' id=letter.id %}"
+              method="POST"
+            >
+              <input type="hidden" name="extra_data" value="another_value" />
+              <button
+                type="submit"
+                style="
+                  border: none;
+                  background: none;
+                  color: red;
+                  cursor: pointer;
+                "
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h1>No viewed Letters</h1>
+    {% endif %} {% else %}
+    <h1>No Letters</h1>
+    {% endif %}
+  </div>
+
+  <div id="notViewedLetters" class="letter-content-box">
+   {% if contacts %} {% if co.4 %}
+    <table
+      class="letter-table"
+      style="border-collapse: separate; border-spacing: 15px; width: 100%"
+    > 
+      <thead>
+        <tr>
+          <th></th>
+          <th>ID</th>
+          <th>Number</th>
+          <th>Location</th>
+          <th>Message</th>
+          <th>Viewed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for letter in letters %} {% if letter.status == 'Not Viewed' %}
+        <tr>
+          <td>
+            <span class="red-bulb">
+              <i
+                class="fa-solid fa-lightbulb"
+                style="color: rgb(106, 100, 100); font-size: 24px"
+              ></i>
+            </span>
+          </td>
+          <td>{{ letter.id }}</td>
+          <td>{{ letter.number }}</td>
+          <td>{{ letter.location }}</td>
+          <td style="width: 30%">{{ letter.message }}</td>
+          <td>{{letter.last_updated_by|default:"--" }}</td>
+          <td>
+            <form
+              action="{% url 'delete_letter' id=letter.id %}"
+              method="POST"
+            >
+              <input type="hidden" name="extra_data" value="another_value" />
+              <button
+                type="submit"
+                style="
+                  border: none;
+                  background: none;
+                  color: red;
+                  cursor: pointer;
+                "
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h1>No viewed Letters</h1>
+    {% endif %} {% else %}
+    <h1>No Letters</h1>
+    {% endif %}
+  </div>
+</div>
+
+
+
+
+<script>
   
- 
-    <script>
-      
-    const passwordInput = document.getElementById("new_password1");
+  const passwordInput = document.getElementById("new_password1");
     const message = document.getElementById("strengthMessage");
     const submitBtn = document.getElementById("submitBtn");
 
@@ -903,5 +1423,6 @@ type="submit"
       });
     </script>
 
-  </div>    
+  
+{% endif %}
 {% endblock %}

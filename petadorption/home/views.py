@@ -51,7 +51,8 @@ def register_view(request):
             Usert.objects.create_user(
                 username=name,
                 email=email,
-                password=password
+                password=password,
+                role="user"
             )
             messages.success(request,"registered successfuly")
     return render(request,'login.html')
@@ -67,7 +68,7 @@ def login_view(request):
         if user:
             login(request,user)
             messages.success(request,"user loged in successfully")
-            return redirect('blog')
+            return redirect('home')
         else:
             messages.error(request,"invalid credentials")
 
@@ -94,7 +95,7 @@ def verifyemail_view(request,email):
             send_mail(
                 subject = "Your PetCare Email Verification Code",
                 message = f"""
-Hi {{ user.first_name|user.username|customer }},
+Hi { request.user.first_name|request.user.username|"customer" },
 
 We received a request to verify your email address for your PetCare account.
 
@@ -131,7 +132,7 @@ PetCare Inc. | 123 Paw Street | New York, NY 10001
                 send_mail(
                     subject = "Your PetCare Email Verification Code",
                     message = f"""
-Hi {{ user.first_name|user.username|customer }},
+Hi { request.user.first_name|request.user.username|"customer" },
 
 🎉 Your email ({{ request.user.email }}) has been successfully verified.
 
@@ -168,12 +169,22 @@ PetCare Inc. | 123 Paw Street | New York, NY 10001
 
 @login_required
 def success_view(request,email):
-    return render(request, 'success.html')  # Or return HttpResponse("Email Verified Successfully!")
+    if email==request.user.email:
+        return render(request, 'success.html')  
+    else:
+        raise Http404("You're not allowed to access this page.")
 
 # === Dashboard ===
-def blog(request):
-    blogs = Blog.objects.all()
+def blog(request, blog=""):
+    if blog == "adopt":
+        blogs = Blog.objects.filter(type='adopt')
+    elif blog == "service":
+        blogs = Blog.objects.filter(type='service')
+    else:
+        blogs = Blog.objects.all()
+
     return render(request, 'blog.html', {'blogs': blogs})
+
 
 
 @login_required
@@ -185,8 +196,14 @@ def profile(request,email):
     user_email = request.user.email
     contacts = Contact.objects.filter(email=user_email)
     letters = Letter.objects.filter(email=user_email)
-    
-    return render(request, 'profile.html', {'contacts': contacts, 'letters': letters, 'form': form})
+    conditions = [
+        any(contact.status=="accepted" for contact in Contact.objects.all()),  # Condition 1
+        any(contact.status=="declined" for contact in Contact.objects.all()),  # Condition 2
+        any(contact.status=="pending" for contact in Contact.objects.all()),   # Condition 3
+        any(letter.status=="Viewed" for letter in Letter.objects.all()),       # Condition 4
+        any(letter.status=="Not Viewed" for letter in Letter.objects.all())    # Condition 5
+    ]
+    return render(request, 'profile.html', {'contacts': contacts, 'letters': letters, 'form': form, 'co' : conditions})
 
 
 @login_required
@@ -406,23 +423,46 @@ def contact_view(request):
             pid=request.POST['pet-id']
         )
         messages.success(request, "Contact form submitted")
-        return redirect
     return render(request, 'contact.html')
+
+
+def delete_contact(request, id):
+    if request.method=='POST':
+        try:
+            contact = get_object_or_404(Contact, id=id)
+            contact.delete()
+        except 404:
+            messages.error(request,"request not found")
+        return redirect(request.META.get('HTTP_REFERER', 'home')) 
+    else:
+        raise Http404("You're not allowed to access this page.")
+
+def delete_letter(request, id):
+    if request.method=='POST':
+        try:
+            letter = get_object_or_404(Letter, id=id)
+            letter.delete()
+        except 404:
+            messages.error(request,"letter not found")
+        return redirect(request.META.get('HTTP_REFERER', 'home')) 
+    else:
+        raise Http404("You're not allowed to access this page.")
+
 
 # === Letter Form ===
 @login_required
 def letter_view(request):
     if request.method == 'POST':
         Letter.objects.create(
-            firstname=request.POST['firstname'],
+            username=request.POST['username'],
             email=request.POST['email'],
-            number=request.POST['number'],
+            number=request.POST['phone'],
             location=request.POST['location'],
             message=request.POST['message']
         )
         messages.success(request, "Letter submitted")
         return redirect('contact')
-    return render(request, 'letter.html')
+    return render(request, 'contact.html')
 
 
 # === Blog Creation ===
