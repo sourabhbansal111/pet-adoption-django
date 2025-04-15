@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Usert, Contact, Letter, Blog
 from django.core.files.storage import FileSystemStorage
 from django.http import Http404
-
+from django.db.models import Q
 
 from django.http import HttpResponse
 
@@ -506,8 +506,9 @@ def create_blog(request):
 @login_required
 def staff_view(request):
     if request.user.is_staff or request.user.is_superuser:
-        users = Usert.objects.filter(role="user")
-        admins = Usert.objects.filter(role="admin")
+        users = Usert.objects.filter(is_staff=False)
+        admins = Usert.objects.filter(Q(is_staff=True) | Q(is_superuser=True))
+
         contacts = Contact.objects.all()
         letters = Letter.objects.all()
         cards = Blog.objects.all()
@@ -526,10 +527,10 @@ def staff_view(request):
 
 
 @login_required
-def superuser_view(request):
+def admin_view(request):
     if request.user.is_superuser:
-        users = Usert.objects.filter(role="user")
-        admins = Usert.objects.filter(role="admin")
+        users = Usert.objects.filter(is_staff=False)
+        admins = Usert.objects.filter(Q(is_staff=True) | Q(is_superuser=True))
         contacts = Contact.objects.all()
         letters = Letter.objects.all()
         cards = Blog.objects.all()

@@ -712,7 +712,7 @@ type="submit"
   {% endif %}
 </form>
 
-<form method="post" action="{% url 'admin' %}" style="position: absolute; top: 80%; right: 3%; text-align: center;">
+<form method="post" action="{% url 'adminpage' %}" style="position: absolute; top: 80%; right: 3%; text-align: center;">
   {% csrf_token %}
 
   {% if request.user.is_superuser %}
