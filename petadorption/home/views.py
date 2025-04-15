@@ -17,6 +17,9 @@ from .forms import UserUpdateForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
+from django.views.decorators.http import require_POST
+from django.http import HttpResponseNotFound
+
 # Create your views here.
 def home(request):
     return render(request ,'home.html')
@@ -513,6 +516,13 @@ def staff_view(request):
         letters = Letter.objects.all()
         cards = Blog.objects.all()
         existing_ids = [card.id for card in cards]
+        conditions = [
+        any(contact.status=="accepted" for contact in Contact.objects.all()),  # Condition 1
+        any(contact.status=="declined" for contact in Contact.objects.all()),  # Condition 2
+        any(contact.status=="pending" for contact in Contact.objects.all()),   # Condition 3
+        any(letter.status=="Viewed" for letter in Letter.objects.all()),       # Condition 4
+        any(letter.status=="Not Viewed" for letter in Letter.objects.all())    # Condition 5
+        ]
 
         return render(request, "staff.html", {
             "admins": admins,
@@ -520,7 +530,8 @@ def staff_view(request):
             "contacts": contacts,
             "letters": letters,
             "cards": cards,
-            "existing_ids": existing_ids
+            "existing_ids": existing_ids,
+            "co":conditions
         })
     else:
         return redirect('lofin')
@@ -535,6 +546,13 @@ def admin_view(request):
         letters = Letter.objects.all()
         cards = Blog.objects.all()
         existing_ids = [card.id for card in cards]
+        conditions = [
+        any(contact.status=="accepted" for contact in Contact.objects.all()),  # Condition 1
+        any(contact.status=="declined" for contact in Contact.objects.all()),  # Condition 2
+        any(contact.status=="pending" for contact in Contact.objects.all()),   # Condition 3
+        any(letter.status=="Viewed" for letter in Letter.objects.all()),       # Condition 4
+        any(letter.status=="Not Viewed" for letter in Letter.objects.all())    # Condition 5
+        ]
 
         return render(request, "superuser.html", {
             "admins": admins,
@@ -542,7 +560,8 @@ def admin_view(request):
             "contacts": contacts,
             "letters": letters,
             "cards": cards,
-            "existing_ids": existing_ids
+            "existing_ids": existing_ids,
+            "co":conditions
         })
     else:
         return redirect('login')
@@ -550,6 +569,64 @@ def admin_view(request):
 
 
 
+@login_required
+def delete_user(request, username):
+    referer_url = request.META.get('HTTP_REFERER', None)
+    if request.method == 'POST':
+        user_to_delete = get_object_or_404(Usert, username=username)
+        
+        if request.user != user_to_delete:  # Optional: prevent deleting yourself
+            user_to_delete.delete()
+            messages.success(request, f"User '{username}' has been deleted successfully.")  # Success message
+        else:
+            messages.warning(request, "You cannot delete your own account.")  # Warning message if user tries to delete themselves
+        if referer_url:
+            return redirect(referer_url)  # Redirect to the referer (previous page)
+        else:
+            return redirect('staff')
+    
+    messages.error(request, "Invalid request method.")  # Error message if not POST
+    return redirect('home') # Fallback to 'staff' if no referer is found
+
+
+
+# ✅ Update status for Contacts
+@login_required
+@require_POST
+def update_status(request):
+    con_ids = request.POST.getlist('con_ids')
+    status = request.POST.get('status')
+    new_status = f"{status} {request.user.username}"
+
+    if con_ids:
+        if status == "del":
+            for contact_id in con_ids:
+                entry = Contact.objects.filter(id=contact_id).first()
+                if entry:
+                    entry.delete()
+        else:
+            Contact.objects.filter(id__in=con_ids).update(status=new_status)
+
+    return redirect(request.META.get('HTTP_REFERER', 'staff'))
+
+
+# ✅ Update status for Letters
+@login_required
+@require_POST
+def update_status_letter(request):
+    lett_ids = request.POST.getlist('lett_ids')
+    status = request.POST.get('status')
+
+    if lett_ids:
+        if status == "del":
+            for letter_id in lett_ids:
+                entry = Letter.objects.filter(id=letter_id).first()
+                if entry:
+                    entry.delete()
+        else:
+            Letter.objects.filter(id__in=lett_ids).update(status=status)
+
+    return redirect(request.META.get('HTTP_REFERER', 'staff'))
 
 
 # === Contact Admin Views ===

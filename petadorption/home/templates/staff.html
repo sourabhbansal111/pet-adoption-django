@@ -1,13 +1,13 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% block content %}
 <div style=" margin-top: 100px">
-  {% if (request.user.username) %}
   <h1>welcome {{user.username}}</h1>
-  {% else %}
-  <h1>welcome to admin page</h1>
-
-  {% endif %}
+  <a href="/admin/"><button class="premium-btn" style="position: absolute; top: 38%; right: 4%;">go to admin</button></a>
   <div class="accordion" id="accordionExample" >
     <!-- First Item -->
+    {% if not request.user.is_superuser %}
+  
+      
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button
@@ -21,44 +21,53 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse ">
         <div class="accordion-body">
-          <form action="/login" method="post" style="font-size: small; text-align: center; max-width: 500px; margin: auto;" class="form">
+          <form action="{% url 'login' %}" method="post" style="font-size: small; text-align: center; max-width: 500px; margin: auto;" class="form">
+            {% csrf_token %}
+            <h3 style="margin-bottom: 20px">Login</h3>
+          
             <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label"
-                >Email address</label
-              >
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                placeholder="Enter your username"
+              />
+            </div>
+            <p>OR</p>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email address</label>
               <input
                 type="email"
                 class="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
+                id="email"
                 name="email"
+                placeholder="example@gmail.com"
               />
             </div>
+          
             <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label"
-                >Password</label
-              >
+              <label for="password" class="form-label">Password</label>
               <input
                 type="password"
                 class="form-control"
-                id="exampleInputPassword1"
+                id="password"
                 name="password"
+                placeholder="Your password"
+                required
               />
             </div>
-            <div class="mb-3">
-              <label for="role">Select Role:</label>
-              <select name="role" id="role" class="form-control" required>
-                <!-- <option value="">Choose Role</option> -->
-                <!-- <option value="user">User</option> -->
-                <option value="superadmin">Super Admin</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+          
+            <button type="submit" class="btn btn-primary" style="margin-top: 30px">
+              Submit
+            </button>
           </form>
         </div>
       </div>
     </div>
-
+      
+    {% endif %}
     
     <!-- Second Item -->
     <div class="accordion-item">
@@ -89,7 +98,7 @@
                 <td>{{admin.username}}</td>
                 <td>{{admin.email}}</td>
                 <td>
-                  {% if admin.email==current_user.email %}
+                  {% if admin.email == request.user.email %}
                     YOU
                   {% endif %}
                     
@@ -103,12 +112,15 @@
       </div>
     </div>
 
-    <!--four item -->
+    <!--four item -->   
     {% include "clcommon.html" %}
+
     
   </div>
 </div>
+{% load static %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='clcommon.css') }}">
-<script src="{{ url_for('static', filename='clcommon.js') }}"></script>
+<link rel="stylesheet" href="{% static 'css/clcommon.css' %}">
+<script src="{% static 'js/clcommon.js' %}"></script>
+
 {% endblock %}

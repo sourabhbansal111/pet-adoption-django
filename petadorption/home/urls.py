@@ -35,8 +35,10 @@ urlpatterns = [
 
     path('staff/', views.staff_view, name='staff'),
     path('adminpage/', views.admin_view, name='adminpage'),
+    path('delete-user/<str:username>/', views.delete_user, name='delete_user'),
 
-
+    path('update_status/', views.update_status, name='update_status'),
+    path('update_status_letter/', views.update_status_letter, name='update_status_letter'),
 
 
 
