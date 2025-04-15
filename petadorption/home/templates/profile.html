@@ -685,6 +685,60 @@ type="submit"
   </button>
 </a>
 
+<form method="post" action="{% url 'staff' %}" style="position: absolute; top: 65%; right: 3%; text-align: center;">
+  {% csrf_token %}
+
+  {% if request.user.is_staff or request.user.is_superuser %}
+  <button
+  style="
+  width: 220px;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #956fa7);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(110, 142, 251, 0.4);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  border: 2px solid transparent;"
+onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 25px rgba(110, 142, 251, 0.6)'"
+onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(110, 142, 251, 0.4)'"
+type="submit"
+>Staff Page</button>
+
+  {% endif %}
+</form>
+
+<form method="post" action="{% url 'admin' %}" style="position: absolute; top: 80%; right: 3%; text-align: center;">
+  {% csrf_token %}
+
+  {% if request.user.is_superuser %}
+  <button
+  style="
+  width: 220px;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #956fa7);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(110, 142, 251, 0.4);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  border: 2px solid transparent;"
+onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 25px rgba(110, 142, 251, 0.6)'"
+onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 20px rgba(110, 142, 251, 0.4)'"
+type="submit"
+>Admin page</button>
+  {% endif %}
+</form>
+
+
 </div>
 </div>
 <!-- Edit Profile Modal -->
@@ -867,6 +921,7 @@ type="submit"
               action="{% url 'delete_contact' id=contact.id %}"
               method="POST"
               >
+              {% csrf_token %}
                 <input type="hidden" name="extra_data" value="another_value" />
                 <button
                   type="submit"
@@ -931,6 +986,7 @@ type="submit"
               action="{% url 'delete_contact' id=contact.id %}"
               method="POST"
             >
+            {% csrf_token %}
               <input type="hidden" name="extra_data" value="another_value" />
               <button
                 type="submit"
@@ -995,6 +1051,7 @@ type="submit"
               action="{% url 'delete_contact' id=contact.id %}"
               method="POST"
             >
+            {% csrf_token %}
               <input type="hidden" name="extra_data" value="another_value" />
               <button
                 type="submit"
@@ -1059,6 +1116,7 @@ type="submit"
               action="{% url 'delete_contact' id=contact.id %}"
               method="POST"
             >
+            {% csrf_token %}
               <input type="hidden" name="extra_data" value="another_value" />
               <button
                 type="submit"
@@ -1082,6 +1140,8 @@ type="submit"
     {% endif %} {% else %}
     <h2>NO Requests</h2>
     {% endif %}
+    {% endif %}
+
   </div>
 </div>
 
@@ -1148,7 +1208,7 @@ type="submit"
               <form
                 action="{% url 'delete_letter' id=letter.id %}"
                 method="POST"
-              >
+              >{% csrf_token %}
                 <input type="hidden" name="extra_data" value="another_value" />
                 <button
                   type="submit"
@@ -1209,7 +1269,7 @@ type="submit"
             <form
               action="{% url 'delete_letter' id=letter.id %}"
               method="POST"
-            >
+            >{% csrf_token %}
               <input type="hidden" name="extra_data" value="another_value" />
               <button
                 type="submit"
@@ -1271,7 +1331,7 @@ type="submit"
             <form
               action="{% url 'delete_letter' id=letter.id %}"
               method="POST"
-            >
+            >{% csrf_token %}
               <input type="hidden" name="extra_data" value="another_value" />
               <button
                 type="submit"
@@ -1421,8 +1481,7 @@ type="submit"
           dropdown.style.display = "none";
         }
       });
-    </script>
+      </script>
 
-  
-{% endif %}
+
 {% endblock %}

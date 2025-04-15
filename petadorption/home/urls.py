@@ -33,6 +33,11 @@ urlpatterns = [
     path('deletecont/<int:id>/', views.delete_contact, name='delete_contact'),
     path('deleteletter/<int:id>/', views.delete_letter, name='delete_letter'),
 
+    path('staff/', views.letter_view, name='staff'),
+    path('admin/', views.letter_view, name='admin'),
+
+
+
 
 
     # Blog

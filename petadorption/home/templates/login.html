@@ -183,47 +183,46 @@
         <form action="{% url 'login' %}" method="post" style="text-align: center">
           {% csrf_token %}
           <h3 style="margin-bottom: 20px">Login</h3>
+        
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label" 
-              >Email address</label
-            >
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+            />
+          </div>
+          <p>OR</p>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
             <input
               type="email"
               class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
+              id="email"
               name="email"
               placeholder="example@gmail.com"
             />
           </div>
+        
           <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label"
-              >Password</label
-            >
+            <label for="password" class="form-label">Password</label>
             <input
               type="password"
               class="form-control"
-              id="exampleInputPassword1"
+              id="password"
               name="password"
-              placeholder="!@#$%^^&!@......."
+              placeholder="Your password"
+              required
             />
           </div>
-          <div class="mb-3">
-            <label for="role">Select Role:</label>
-            <select name="role" id="role" class="form-control" required>
-              <!-- <option value="">Choose Role</option> -->
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            style="margin-top: 30px"
-          >
+        
+          <button type="submit" class="btn btn-primary" style="margin-top: 30px">
             Submit
           </button>
         </form>
+        
         <a href="{% url 'forgot_password' %}" style="text-decoration: none; color: white; margin-top: 8px;">
           🔑 Forgot Password?
         </a>

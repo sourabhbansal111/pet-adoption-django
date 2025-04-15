@@ -52,27 +52,39 @@ def register_view(request):
                 username=name,
                 email=email,
                 password=password,
-                role="user"
             )
             messages.success(request,"registered successfuly")
     return render(request,'login.html')
 
-
 def login_view(request):
-    if request.method=="POST":
-        email=request.POST.get('email')
-        password=request.POST.get('password')
-        user = Usert.objects.get(email=email)
-        user=authenticate(request,username=user.username,email=email,password=password)
-        #authenticate will check for username and password in your database
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = None
+
+        # Try with username if given
+        if username:
+            user = authenticate(request, username=username, password=password)
+
+        # If not authenticated and email is provided, try to find username by email
+        if user is None and email:
+            try:
+                user_obj = Usert.objects.get(email=email)
+                user = authenticate(request, username=user_obj.username, password=password)
+            except Usert.DoesNotExist:
+                user = None
+
         if user:
-            login(request,user)
-            messages.success(request,"user loged in successfully")
+            login(request, user)
+            messages.success(request, "User logged in successfully")
             return redirect('home')
         else:
-            messages.error(request,"invalid credentials")
+            messages.error(request, "Invalid credentials. Please check your info.")
 
-    return render(request,'login.html')
+    return render(request, 'login.html')
+
 
 def logout_view(request):
     logout(request)
@@ -95,7 +107,7 @@ def verifyemail_view(request,email):
             send_mail(
                 subject = "Your PetCare Email Verification Code",
                 message = f"""
-Hi { request.user.first_name|request.user.username|"customer" },
+Hi { request.user.username},
 
 We received a request to verify your email address for your PetCare account.
 
@@ -132,7 +144,7 @@ PetCare Inc. | 123 Paw Street | New York, NY 10001
                 send_mail(
                     subject = "Your PetCare Email Verification Code",
                     message = f"""
-Hi { request.user.first_name|request.user.username|"customer" },
+Hi {request.user.username },
 
 🎉 Your email ({{ request.user.email }}) has been successfully verified.
 
@@ -285,7 +297,7 @@ def forgot_password_view(request):
             send_mail(
                 subject = "Your PetCare Email Verification Code",
                 message = f"""
-Hi {user.email},
+Hi {user.username},
 
 We received a request to Change password for your PetCare account.
 
@@ -350,7 +362,7 @@ def set_new_password_view(request):
                         send_mail(
                             subject = "Your PetCare Email Verification Code",
                             message =f"""
-Hi {{ user.first_name|user.username|customer }},
+Hi {user.username },
 
 We’re letting you know that your password was successfully changed.
 
@@ -488,6 +500,56 @@ def create_blog(request):
         messages.success(request, "Blog added")
         return redirect('blog')
     return render(request, 'create_blog.html')
+
+
+
+@login_required
+def staff_view(request):
+    if request.user.is_staff or request.user.is_superuser:
+        users = Usert.objects.filter(role="user")
+        admins = Usert.objects.filter(role="admin")
+        contacts = Contact.objects.all()
+        letters = Letter.objects.all()
+        cards = Blog.objects.all()
+        existing_ids = [card.id for card in cards]
+
+        return render(request, "staff.html", {
+            "admins": admins,
+            "users": users,
+            "contacts": contacts,
+            "letters": letters,
+            "cards": cards,
+            "existing_ids": existing_ids
+        })
+    else:
+        return redirect('lofin')
+
+
+@login_required
+def superuser_view(request):
+    if request.user.is_superuser:
+        users = Usert.objects.filter(role="user")
+        admins = Usert.objects.filter(role="admin")
+        contacts = Contact.objects.all()
+        letters = Letter.objects.all()
+        cards = Blog.objects.all()
+        existing_ids = [card.id for card in cards]
+
+        return render(request, "superuser.html", {
+            "admins": admins,
+            "users": users,
+            "contacts": contacts,
+            "letters": letters,
+            "cards": cards,
+            "existing_ids": existing_ids
+        })
+    else:
+        return redirect('login')
+
+
+
+
+
 
 # === Contact Admin Views ===
 @login_required
