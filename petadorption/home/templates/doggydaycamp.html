@@ -1,0 +1,488 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block style %}
+<style>
+        .dogydaycamp {
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dogydaycamp>div:nth-of-type(1) {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            align-items: center;
+            padding: 50px 0;
+            width: 100%;
+        }
+
+        .dogydaycamp>div:nth-of-type(1)>div {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: center;
+            align-items: center;
+            width: 30%;
+        }
+
+        .dogydaycamp>div:nth-of-type(1)>div>div {
+            position: relative;
+            border-radius: 100px;
+            width: 220px;
+            height: 220px;
+            margin-bottom: 20px;
+            z-index: 0;
+        }
+
+        .dogydaycamp>div:nth-of-type(1)>div>div>img {
+            z-index: 1;
+            position: relative;
+            height: 220px !important;
+            width: 220px !important;
+            object-fit: cover !important;
+            border-radius: 100%;
+        }
+
+        .dogydaycamp>div:nth-of-type(1)>div>div::before {
+            content: '';
+            background: #FCF3CD;
+            opacity: 0.75;
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 100px;
+            bottom: 0;
+            left: -20px;
+            z-index: index -1;
+        }
+
+        .dogydaycamp>div:nth-of-type(1)>div>div::after {
+            content: '';
+            background: #835997;
+            opacity: 0.5;
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 100px;
+            top: -10;
+            right: -50px;
+            z-index: index -1;
+        }
+
+        .dogydaycamp>div:nth-of-type(1)>div>h1 {
+            font-size: 42px;
+            font-family: "Cabin", sans-serif;
+            margin-bottom: 10px;
+            color: #4b4a4ae1;
+            font-weight: bold;
+        }
+
+        .dogydaycamp>div:nth-of-type(2) {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dogydaycamp>div:nth-of-type(2)>table {
+            border: 2.5px solid #835997;
+            width: 85%;
+            text-align: center;
+            font-family: "Roboto", Sans-serif;
+        }
+
+        .dogydaycamp>div:nth-of-type(2)>table>thead>tr>th {
+            border: 1.5px solid;
+            background-color: #835997;
+            color: white;
+            font-size: 22px;
+            padding: 15px 20px 15px 20px;
+            text-align: center;
+        }
+
+        .dogydaycamp>div:nth-of-type(2)>table>tbody>tr>td {
+            font-size: 17px;
+            padding: 12px 20px 0px 20px;
+            color: rgba(0, 0, 0, 0.747);
+            text-align: center;
+        }
+
+        .dogydaycamp>div:nth-of-type(2)>h1 {
+            font-family: "Cabin", Sans-serif;
+            text-align: center;
+            color: #7A7A7A;
+            width: 85%;
+            font-size: x-large;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .dogydaycamp>div:nth-of-type(3) {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: "Cabin", Sans-serif;
+            color: #575656e5;
+            width: 80%;
+        }
+
+        .dogydaycamp>div:nth-of-type(3)>a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            background-color: #f79534;
+            width: 180px;
+            height: 70px;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: large;
+            margin: 30px;
+        }
+
+        .dogydaycamp>div:nth-of-type(3)>div {
+            display: flex;
+            justify-content:space-between;
+
+        }
+
+        .dogydaycamp>div:nth-of-type(3)>div>img {
+            border-radius: 100%;
+            width: 60px;
+            height: 60px;
+            /* padding: 30px; */
+        }
+        .dogydaycamp>div:nth-of-type(3)>div>div>h1 {
+            margin: 0 0 21.44px 0;
+            /* color: #7A7A7A; */
+        }
+        .dogydaycamp>div:nth-of-type(3)>div>div>h3 {
+            margin-top: -14px;
+            color: #7A7A7A;
+            font-weight: lighter;
+            font-size: x-large;
+        }
+
+        .dogydaycamp>div:nth-of-type(4) {
+            color: #353434e5;
+            font-family: "Cabin", Sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            background-color: white;
+        }
+
+        .dogydaycamp>div:nth-of-type(4)>h1 {
+            font-size: 48px;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .dogydaycamp>div:nth-of-type(4)>h3 {
+            color: #7A7A7A;
+            margin-top: -20px;
+            width: 80%;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .dogydaycamp>div:nth-of-type(4)>div {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dogydaycamp>div:nth-of-type(4)>div>div {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            gap: 85px;
+            padding: 50px 0;
+            width: 80%;
+        }
+
+
+        .dogydaycamp>div:nth-of-type(4)>div>div>div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 21%;
+        }
+
+        .dogydaycamp>div:nth-of-type(4)>div>div>div>h2 {
+            margin: 60px 0 0 0;
+            color: #767270;
+        }
+
+        .dogydaycamp>div:nth-of-type(4)>div>div>div>h3 {
+            color: #76707c;
+            padding: 30px 20px;
+            margin: 0;
+            font-size: large;
+            font-weight: 300;
+            line-height: 30px;
+        }
+
+        #color {
+            width: 100%;
+            height: 130px;
+            background-color: #e0d5e5;
+        }
+
+        #color>div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nmbr {
+            border-radius: 100%;
+            width: 80px;
+            height: 80px;
+            background-color: #383838;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 90px;
+        }
+
+        #nmbr {
+            border-radius: 100%;
+            border: 2.5px solid white;
+            width: 60px;
+            height: 60px;
+            background-color: #383838;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 1000;
+            font-size: 25px;
+        }
+
+    </style>
+    
+    {% endblock %}
+
+    {% block content %}
+    <div class="dogydaycamp">
+        <!-- div 1 -->
+        <div>
+            <div>
+                <div>
+                    <img src="{% static 'images/dog-close-up.jpg' %}" alt="">
+                </div>
+                <h1>Membership Tiers</h1>
+            </div>
+        </div>
+        <!-- div 2 -->
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>BRONZE</th>
+                        <th>SILVER</th>
+                        <th>GOLD</th>
+                        <th>PLATINUM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4 Days a Month</td>
+                        <td>8 Days a Month</td>
+                        <td>12 Days a Month</td>
+                        <td>Unlimited Days a Month</td>
+                    </tr>
+                    <tr>
+                        <td>Includes a Nail Trim or Grind Every Month</td>
+                        <td>Includes a Monthly Bath</td>
+                        <td>Includes a Monthly Bath</td>
+                        <td>Includes a Monthly Bath</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td style="padding: 12px 20px 12px 20px;">Includes 1 Night of Boarding a Month</td>
+                        <td style="padding: 12px 20px 12px 20px;">Includes 2 Nights of Boarding a Month</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Looking for more from your daycare membership? Explore our <b>Elite Packages</b> and unlock the full
+                range of
+                premium benefits we have to offer!</h1>
+        </div>
+        <!-- div 3 -->
+        <div>
+            <div>
+                <img src="{% static 'images/pet_icon.png' %}" alt="">
+                <div>
+                    <h1>Best in Breed</h1>
+                    <h3>Unlimited daycare, 3 nights of boarding plus one add-on (suite treat, ice cream or bedtime
+                        story), and one bath each month.</h3>
+                </div>
+            </div>
+            <div>
+                <img src="{% static 'images/pet_icon.png' %}" alt="">
+                <div>
+                    <h1>Best in Group</h1>
+                    <h3>Unlimited daycare, 5 nights of boarding plus one add-on (suite treat, ice cream or bedtime
+                        story), and one bath each month.</h3>
+                </div>
+            </div>
+            <div>
+                <img src="{% static 'images/pet_icon.png' %}" alt="">
+                <div>
+                    <h1>Best in Show</h1>
+                    <h3>Unlimited daycare, 7 nights of boarding a month plus one add-on a (suite treat, ice cream or
+                        bedtime story), go home bath every stay, and one free boarding upgrade each month. No black out
+                        days.</h3>
+                </div>
+            </div>
+            <a href="{% url 'boarding' %}">See Pricing</a>
+        </div>
+        <!-- div 4 -->
+        <div>
+            <h1>A day in the life.</h1>
+            <h3>Under the supervision of our Certified Doggy Day Camp Counselors, your dog will spend the day doing what
+                dogs do best: playing, snacking, napping and loving life!</h3>
+            <div>
+                <div>
+                    <!-- child div 1 -->
+                    <div>
+                        <div id="color">
+                            <div>
+                                <div class="nmbr">
+                                    <div id="nmbr">#1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Check-In</h2>
+                        <h3>Upon arrival, you and your dog are greeted by staff. If you're both new to camp, you'll
+                            beinterviewed first to make sure your pup is a good fit for us (and vice versa).</h3>
+                    </div>
+                    <!-- child div 2 -->
+                    <div>
+                        <div id="color" style="background-color: #fad5a8;">
+                            <div>
+                                <div class="nmbr">
+                                    <div id="nmbr">#1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Group play time</h2>
+                        <h3>Your dog heads in with other campers and counselors to our indoor/outdoor play areas for
+                            group activity. If it’s a holiday or camper birthday, there may even be a party (we’ll find
+                            any excuse).</h3>
+                    </div>
+                    <!-- child div 3 -->
+                    <div>
+                        <div id="color" style="background-color: #fcf3cc;">
+                            <div>
+                                <div class="nmbr">
+                                    <div id="nmbr">#1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Missing your dog right about now?</h2>
+                        <h3>Most of our locations offer petcams for our pet parents. Hop on any time and see what your
+                            best friend is up to (other than missing you, obviously).</h3>
+                    </div>
+                    <!-- child div 4 -->
+                    <div>
+                        <div id="color">
+                            <div>
+                                <div class="nmbr">
+                                    <div id="nmbr">#1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Nap Time</h2>
+                        <h3>After lunch, the dogs can relax, take a snooze, or play some more! Our Camp rooms have
+                            plenty of space for those who want some rest & relaxation.</h3>
+                    </div>
+                    <!-- child div 5 -->
+                    <div>
+                        <div id="color" style="background-color: #fad5a8;">
+                            <div>
+                                <div class="nmbr">
+                                    <div id="nmbr">#1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Extras</h2>
+                        <h3>We want your dog to love their days at Best Friends, so we’re big on customization. You can
+                            make sure your dog has a bath, extra cuddle time or even an ice cream with our extensive
+                            add-ons menu.</h3>
+                    </div>
+                    <!-- child div 6 -->
+                    <div>
+                        <div id="color" style="background-color: #fcf3cc;">
+                            <div>
+                                <div class="nmbr">
+                                    <div id="nmbr">#1</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Pickup</h2>
+                        <h3>All fun days must come to an end. When you come to get your dog, we’ll fill you in on their
+                            day—how they ate, played and slept. We’ll also let you know about any upcoming events, like
+                            scavenger hunts, ice cream socials and more.</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 9999;
+          min-width: 250px;
+          max-width: 350px;
+          background-color: #6b32e4;
+          color: #fff;
+          border: none;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          font-weight: 500;
+          font-size: 14px;
+          padding: 12px 16px;
+          border-radius: 8px;
+          transition: opacity 0.5s ease;
+          animation: fadeOut 0.5s ease 7s forwards;
+        ">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            filter: invert(1);
+          "></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+{% endblock %}

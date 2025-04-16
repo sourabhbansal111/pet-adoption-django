@@ -13,7 +13,7 @@
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 20px;
         padding: 20px;
-        margin-top: 50px;
+        margin-top: 0;
     }
 
     .container>div {
@@ -192,10 +192,37 @@
         display: inline-block;
         margin-bottom: 5px; /* Push input field down */
     }
+    
+  .hero-banner {
+    background-image: url("{% static 'images/gold.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    margin: 60px auto 0 auto;
+    overflow: hidden;
+  }
 </style>
+
 {% endblock %}
 
 {% block content %}
+<div class="hero-banner">
+    {% if key == "adopt" %}
+        PETS FOR ADOPTION
+    {% elif key == "service" %}
+        PET SERVICES
+    {% else %}  
+    Welcome to Pet World 🐾
+    {% endif %}
+</div>
 
 <div class="container">
     {% for card in blogs %}

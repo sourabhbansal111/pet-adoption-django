@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block style %}
+<style>
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background-color: white;
+            gap: 10px;
+            font-family: "Cabin", Sans-serif;
+            font-weight: 200;
+            margin-top: 80px;
+        }
+        
+        /* #f0e9f5 */
+        .tab {
+            color: #6c3f82;
+            padding: 20px 30px;
+            cursor: pointer;
+            background-color: #e0d5e5;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .tab:hover {
+            background-color: #6c3f82;
+            color: white;
+        }
+
+        .tab.active {
+            color: white;
+            background-color: #6c3f82;
+        }
+
+        .boarding {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .boarding>.heading {
+            width: 100%;
+            background-color: #fcf3cc;
+            color: #46403c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 7px;
+        }
+
+        .boarding>.heading>h1 {
+            width: 100%;
+            font-size: 22px;
+            margin: 14.7px 20px;
+            background-color: #fcf3cc;
+            color: #46403c;
+            /* height: 70px; */
+            font-family: "Cabin", Sans-serif!important;
+            font-weight: bold;
+        }
+
+        .boarding>.card {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            gap: 50px;
+            padding: 50px 0;
+            width: 80%;
+            font-family: "Cabin", Sans-serif;
+            border: 0;
+        }
+
+        .boarding>.card>div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.33);
+            width: 30%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .boarding>.card>div:hover {
+            transform: scale(1.05);
+        }
+
+        .boarding>.card>div>img {
+            width: 100%;
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+        }
+
+        .boarding>.card>div>h1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100px;
+            background-color: #e0d5e5;
+            font-family: "Cabin", Sans-serif;
+            font-size: 24px;
+            text-align: center;
+            color: #6C3E82;
+            font-weight: 500;
+        }
+
+        .boarding>.card>div>h3 {
+            text-align: center;
+            font-family: "Cabin", Sans-serif;
+            font-size: 18px;
+            padding: 20px;
+            color: rgba(0, 0, 0, 0.603);
+            font-weight: 300;
+            margin: 0;
+        }
+
+        .boarding>.card>div>h2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Cabin", Sans-serif;
+            font-size: 18px;
+            font-weight: 300;
+            width: 100%;
+            height: 60px;
+            color: white;
+            background-color: #6c3f82;
+        }
+
+        .boarding>.card>div>a {
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background-color: #f79534;
+            font-weight: bold;
+            border-radius: 10px;
+            width: 90%;
+            height: 70px;
+            margin-bottom: 20px;
+        }
+
+       
+    </style>
+
+
+    
+{% endblock %}
+
+{% block content %}
+    
+    <div class="tabs">
+        <a href="{% url 'boarding' %}" class="tab active">BOARDING</a>
+        <a href="{% url 'doggycamp' %}" class="tab" data-tab="daycamp">DOGGY DAY CAMP</a>
+        <a href="{% url 'puppyplay' %}" class="tab">PUPPY PLAY GROUP</a>
+        <a href="{% url 'grooming' %}" class="tab">GROOMING</a>
+    </div>
+
+    </div>
+    <div class="boarding">
+        <!-- div 1 -->
+        <div class="heading">
+            <h1>BOARDING | PLAY & STAY (DOGS)</h1>
+        </div>
+        <!-- div 2 -->
+        <div class="card">
+            <!-- card 1 -->
+            <div>
+                <img src="{% static 'images/boarding_dogs.jpg' %}" alt="">
+                <h1>STANDARD SUITE<br>w/ INDIVIDUAL PLAY</h1>
+                <h3>Reserve one of our standard dog boarding suites for your pup, and let them enjoy individual dog
+                    daycare and relaxation all day.</h3>
+                <h2>$62 per night</h2>
+                <a href="">BOOK NOW</a>
+            </div>
+            <!-- card 2 -->
+            <div>
+                <img src="{% static 'images/boarding_dogs.jpg' %}" alt="">
+                <h1>STANDARD SUITE<br>w/ GROUP PLAY</h1>
+                <h3>Reserve one of our standard dog boarding suites for your pup, and let them have a blast all day in
+                    our group dog daycare.</h3>
+                <h2>$57 per night</h2>
+                <a href="">BOOK NOW</a>
+            </div>
+            <!-- card 3 -->
+            <div>
+                <img src="{% static 'images/boarding_dogs.jpg' %}" alt="">
+                <h1>LUXURY SUITE<br>w/ INDIVIDUAL PLAY</h1>
+                <h3>Upgrade your pup to one of our luxury dog boarding suites, and let them enjoy individual dog daycare
+                    and relaxation all day.</h3>
+                <h2>$72 per night</h2>
+                <a href="">BOOK NOW</a>
+            </div>
+            <!-- card 4 -->
+            <div>
+                <img src="{% static 'images/boarding_dogs.jpg' %}" alt="">
+                <h1>LUXURY SUITE<br>w/ GROUP PLAY</h1>
+                <h3>Upgrade your pup to one of our luxury dog boarding suites, and let them have a blast all day in our
+                    group dog daycare.</h3>
+                <h2>$67 per night</h2>
+                <a href="">BOOK NOW</a>
+            </div>
+        </div>
+        <!-- div 3 -->
+        <div class="heading">
+            <h1>BOARDING (CATS)</h1>
+        </div>
+        <!-- div 4 -->
+        <div class="card">
+            <div>
+                <img src="{% static 'images/boarding_cats.jpg' %}" alt="">
+                <h1>Standard Cat Condo</h1>
+                <h3>Cozy, safe, and fun boarding – designed exclusively for cats.</h3>
+                <h2>$25 per night</h2>
+                <a href="">BOOK NOW</a>
+            </div>
+        </div>
+        <!-- div 5 -->
+        <div class="heading">
+            <h1>BOARDING (POCKET PETS)</h1>
+        </div>
+        <!-- div 6 -->
+        <div class="card">
+            <div>
+                <img src="{% static 'images/boarding_pocket_pets.jpg' %}" alt="">
+                <h1>Pocket Pet Rate</h1>
+                <h3>From rabbits to hamsters to parakeets and beyond, we take care of most household pets while you’re
+                    away.</h3>
+                <h2>$21 per night</h2>
+                <a href="">BOOK NOW</a>
+            </div>
+        </div>
+    </div>
+   
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 9999;
+          min-width: 250px;
+          max-width: 350px;
+          background-color: #6b32e4;
+          color: #fff;
+          border: none;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          font-weight: 500;
+          font-size: 14px;
+          padding: 12px 16px;
+          border-radius: 8px;
+          transition: opacity 0.5s ease;
+          animation: fadeOut 0.5s ease 7s forwards;
+        ">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            filter: invert(1);
+          "></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}

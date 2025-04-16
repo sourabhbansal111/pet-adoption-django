@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 import os
 from django.http import JsonResponse
+import json
 
 import random
 from .forms import UserUpdateForm
@@ -218,7 +219,7 @@ def blog(request, blog=""):
     else:
         blogs = Blog.objects.all()
 
-    return render(request, 'blog.html', {'blogs': blogs})
+    return render(request, 'blog.html', {'blogs': blogs,'key':blog})
 
 
 
@@ -645,7 +646,58 @@ def update_status(request):
                 if entry:
                     entry.delete()
         else:
-            Contact.objects.filter(id__in=con_ids).update(status=status)
+            for contact_id in con_ids:
+                cont = Contact.objects.filter(id=contact_id)
+                Contact.objects.filter(id=contact_id).update(status=status)
+                if status=="acepted":
+                    send_mail(
+                            subject = "Your PetCare Email Verification Code",
+                            message = f"""
+Hi {cont.username},
+
+Great news! Your recent request has been **accepted** ✅
+
+We’re happy to inform you that everything has been reviewed and approved successfully. If you have any questions or need further assistance, feel free to reach out.
+
+Thanks for being a part of PetCare 🐾
+
+Warm regards,  
+The PetCare Team  
+https://www.petcare.com
+
+PetCare Inc. | 123 Paw Street | New York, NY 10001
+""",
+                    
+
+                            from_email='parkspaws.petcare@gmail.com',
+                            recipient_list=[cont.email],
+                            fail_silently=False,
+                        )
+                else:
+                    send_mail(
+                            subject = "Your PetCare Email Verification Code",
+                            message = f"""
+Hi {cont.username},
+
+We wanted to let you know that your recent request has been **declined** ❌
+
+This could be due to missing information or something not meeting our current requirements. You’re welcome to reach out for more details or reapply with the necessary changes.
+
+Thanks for understanding and being a valued part of PetCare 🐾
+
+Warm regards,
+{cont.last_updated_by}  
+The PetCare Team  
+https://www.petcare.com
+
+PetCare Inc. | 123 Paw Street | New York, NY 10001
+""",
+                    
+
+                            from_email='parkspaws.petcare@gmail.com',
+                            recipient_list=[cont.email],
+                            fail_silently=False,
+                        )
 
     return redirect(request.META.get('HTTP_REFERER', 'fallback_url'))
 
@@ -708,6 +760,29 @@ def get_pet_data(request):
                 return JsonResponse({'pet_id': pet.id})
 
     return JsonResponse({})
+
+def doggydaycamp(request):
+    return render(request ,'doggydaycamp.html')
+
+def see_pricing(request):
+    return render(request ,'boarding.html')
+
+def grooming(request):
+    return render(request ,'grooming.html')
+
+def doggycamp(request):
+    return render(request , 'doggycamp.html')
+
+def puppyplay(request):
+    return render(request ,'PuppyPlayGroup.html')
+
+def faq(request):
+    return render(request , 'faq.html')
+
+
+
+
+
 # === Contact Admin Views ===
 @login_required
 @user_passes_test(is_admin)

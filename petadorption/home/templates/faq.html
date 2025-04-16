@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block style %}
+<style>
+    .faq-section {
+    background-color: #fff;
+    color: #353434e5;
+    font-family: "Cabin", Sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    text-align: center;
+    padding: 80px 0;
+}
+
+.faq-section > h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.faq-section > h3 {
+    color: #7A7A7A;
+    margin-top: -10px;
+    font-size: 24px;
+    width: 80%;
+}
+.faq-section > div{
+    display: flex;
+    flex-direction: column;
+}
+.faq-section > div > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 60px;
+    padding: 50px 0;
+    width: 80%;
+    margin: auto;
+}
+
+.faq-section > div > div > div {
+    width: 100%;
+    background: #f9f9f9;
+    margin: auto;
+    padding: 30px 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.faq-section > div > div > div > h2 {
+    color: #835997;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.faq-section > div > div > div > h3 {
+    color: #575656e5;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<div id="faq" class="faq-section">
+    <h1>Frequently Asked Questions</h1>
+    <h3>Your most common questions, answered here</h3>
+    <div>
+        <div>
+            <div>
+                <h2>What is Doggy Day Camp?</h2>
+                <h3>Doggy Day Camp is a fun and safe place for your furry friend to socialize, play, and relax under the supervision of trained staff while you're away.</h3>
+            </div>
+            <div>
+                <h2>Do I need to make a reservation?</h2>
+                <h3>Yes! We encourage all pet parents to make a reservation ahead of time to ensure we have a spot for your pup.</h3>
+            </div>
+            <div>
+                <h2>What are the drop-off and pick-up times?</h2>
+                <h3>Drop-off begins at 7:00 AM and pick-up runs until 7:00 PM. Late pick-ups may incur an additional fee.</h3>
+            </div>
+            <div>
+                <h2>What should I bring with my dog?</h2>
+                <h3>Just bring your dog on a leash! We'll provide food, water, toys, and love. If your dog has special dietary needs, bring their food and feeding instructions.</h3>
+            </div>
+            <div>
+                <h2>Are vaccinations required?</h2>
+                <h3>Yes, all dogs must be up-to-date on Rabies, Distemper, and Bordetella vaccines. Proof is required before attending.</h3>
+            </div>
+            <div>
+                <h2>Can puppies attend?</h2>
+                <h3>Puppies must be at least 4 months old and have completed their initial vaccination series to attend.</h3>
+            </div>
+            <div>
+                <h2>Is staff trained to handle emergencies?</h2>
+                <h3>Absolutely! Our team is trained in pet first aid and CPR. Your dog’s safety is our top priority.</h3>
+            </div>
+            <div>
+                <h2>Do you separate dogs by size or temperament?</h2>
+                <h3>Yes, dogs are grouped based on size, play style, and personality to ensure a safe and fun experience for everyone.</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert" style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 250px;
+      max-width: 350px;
+      background-color: #6b32e4;
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-weight: 500;
+      font-size: 14px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: opacity 0.5s ease;
+      animation: fadeOut 0.5s ease 7s forwards;
+    ">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        filter: invert(1);
+      "></button>
+</div>
+{% endfor %}
+{% endif %}
+
+
+{% endblock %}
