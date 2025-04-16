@@ -11,6 +11,8 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from django.core.mail import send_mail
+import os
+from django.http import JsonResponse
 
 import random
 from .forms import UserUpdateForm
@@ -42,6 +44,24 @@ def register_view(request):
         email=request.POST.get('email')
         password=request.POST.get('password')
         cpassword=request.POST.get('cpassword')
+        if request.POST.get('role'): 
+            if not name:
+                messages.error(request,"please enter valid username")
+            elif password!=cpassword:
+                messages.error(request,"password not match")
+            elif Usert.objects.filter(email=email).exists():
+                messages.error(request, "Email already exists.")
+            elif Usert.objects.filter(username=name).exists():
+                messages.error(request, "Username already taken.")
+            else:
+                Usert.objects.create(
+                username=name,
+                email=email,
+                password=password,
+                is_staff=True
+                )
+                messages.success(request,"registered successfuly")
+            return redirect('adminpage')
         if not name:
             messages.error(request,"please enter valid username")
         elif password!=cpassword:
@@ -482,29 +502,50 @@ def letter_view(request):
 
 # === Blog Creation ===
 @login_required
-@user_passes_test(is_admin)
 def create_blog(request):
     if request.method == 'POST':
         id = request.POST['id']
+
+        # Check if the ID already exists
+        if Blog.objects.filter(id=id).exists():
+            messages.error(request, "ID already exists! Please use a unique ID.")
+            return redirect('blog')
+
         photo = request.FILES['photo']
-        pet_name = request.POST['pet_name']
+        if not photo:
+            messages.error(request, "No photo selected.")
+            return redirect(request.META.get('HTTP_REFERER', 'blog'))
+
+        type = request.POST['type']
+        pet_name = request.POST['pname']
         heading_explanation = request.POST['heading_explanation']
-        subheadings = "**".join(request.POST.getlist('subheadings'))
-        explanations = "**".join(request.POST.getlist('explanations'))
+        subheadings = "**".join(request.POST.getlist('subheading[]'))
+        explanations = "**".join(request.POST.getlist('explanation[]'))
+
+        # Custom file path
+        upload_folder = os.path.join('home','static', 'images', 'uploads', 'pets')
+        os.makedirs(upload_folder, exist_ok=True)
+
+        filename = photo.name
+        filepath = os.path.join(upload_folder, filename)
+
+        with open(filepath, 'wb+') as destination:
+            for chunk in photo.chunks():
+                destination.write(chunk)
 
         Blog.objects.create(
             id=id,
-            photo=photo,
+            photo=photo,  # Save the relative path if you plan to render it
+            type=type,
             pet_name=pet_name,
             heading_explanation=heading_explanation,
             subheadings=subheadings,
             explanations=explanations
         )
-        messages.success(request, "Blog added")
+        messages.success(request, "Blog added successfully!")
         return redirect('blog')
+
     return render(request, 'create_blog.html')
-
-
 
 @login_required
 def staff_view(request):
@@ -596,7 +637,6 @@ def delete_user(request, username):
 def update_status(request):
     con_ids = request.POST.getlist('con_ids')
     status = request.POST.get('status')
-    new_status = f"{status} {request.user.username}"
 
     if con_ids:
         if status == "del":
@@ -605,9 +645,9 @@ def update_status(request):
                 if entry:
                     entry.delete()
         else:
-            Contact.objects.filter(id__in=con_ids).update(status=new_status)
+            Contact.objects.filter(id__in=con_ids).update(status=status)
 
-    return redirect(request.META.get('HTTP_REFERER', 'staff'))
+    return redirect(request.META.get('HTTP_REFERER', 'fallback_url'))
 
 
 # ✅ Update status for Letters
@@ -626,9 +666,48 @@ def update_status_letter(request):
         else:
             Letter.objects.filter(id__in=lett_ids).update(status=status)
 
-    return redirect(request.META.get('HTTP_REFERER', 'staff'))
+    return redirect(request.META.get('HTTP_REFERER', 'fallback_url'))
 
 
+
+def blog_delete(request):
+    if request.method == 'POST':
+        blog_id = request.POST.get("blog_id")
+
+        if not blog_id:
+            messages.error(request, "Blog ID is required!")
+            return redirect(request.META.get('HTTP_REFERER', 'fallback_url'))
+
+        blog = Blog.objects.filter(id=blog_id).first()
+        if blog:
+            blog.delete()
+            messages.success(request, "Blog deleted successfully!")
+        else:
+            messages.error(request, "Blog ID not found!")
+
+        return redirect(request.META.get('HTTP_REFERER', 'fallback_url'))
+
+    # If it's not a POST request
+    messages.error(request, "Invalid request method.")
+    return redirect('blog')
+
+
+def get_pet_data(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        value = data.get('value')
+        field = data.get('field')
+
+        if field == 'id':
+            pet = Blog.objects.filter(id=value).first()
+            if pet:
+                return JsonResponse({'pet_name': pet.pet_name})
+        elif field == 'name':
+            pet = Blog.objects.filter(pet_name=value).first()
+            if pet:
+                return JsonResponse({'pet_id': pet.id})
+
+    return JsonResponse({})
 # === Contact Admin Views ===
 @login_required
 @user_passes_test(is_admin)

@@ -111,6 +111,16 @@
         color: white;
         text-align: center;
       }
+      .strength-message {
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  .valid {
+    color: green;
+  }
+  .invalid {
+    color: red;
+  }
   @keyframes fadeInOut {
     0% {
       opacity: 0;
@@ -273,6 +283,7 @@
               placeholder="password"
             />
           </div>
+          <div id="strengthMessage" class="strength-message"></div>
           <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label"
               >confirm Password</label
@@ -291,7 +302,7 @@
           <option value="user" style="color: #5ffbf1">user</option>
           <!-- <option value="admin">admin</option> -->
           <!-- </select> -->
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" id="submitBtn1" class="btn btn-primary">Submit</button>
         </form>
         <div style="display: flex; margin-top: 15px">
           <p>Already have an account?</p>
@@ -392,6 +403,30 @@
     // pawCount++;
     if (pawCount >= 15) clearInterval(pawInterval);
   }, 300);
+
+  const passwordInput = document.getElementById("exampleInputPassword1");
+  const message = document.getElementById("strengthMessage");
+  const submitBtn = document.getElementById("submitBtn1");
+
+  passwordInput.addEventListener("input", function () {
+  const value = passwordInput.value;
+  const simplePassword = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+  const simplePassword2 = /^.{9,}$/;
+
+
+  if (value.length === 0) {
+    message.textContent = "";
+    submitBtn.disabled = true;
+  } else if (simplePassword.test(value) || simplePassword2.test(value)) {
+    message.textContent = "Looks good 👍";
+    message.className = "strength-message valid";
+    submitBtn.disabled = false;
+  } else {
+    message.textContent = "At least 6 characters with a letter & number or 9 characters ";
+    message.className = "strength-message invalid";
+    submitBtn.disabled = true;
+  }
+});
 </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

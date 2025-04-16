@@ -34,7 +34,7 @@
               class="control-btn approve-btn"
               type="submit"
               name="status" 
-              value="Accepted"
+              value="accepted"
               disabled
             >
               Accept
@@ -44,7 +44,7 @@
               class="control-btn reject-btn"
               type="submit"
               name="status"
-              value="Declined"
+              value="declined"
               disabled
             >
               Decline
@@ -75,12 +75,12 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Pet Name</th>
-                <th>Pet id</th>
+                <th>User Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
+                <th>Type</th>
+                <th>Pet / service Name</th>
+                <th>Pet / service id</th>
                 <th>Location</th>
                 <th>Message</th>
               </tr>
@@ -102,14 +102,14 @@
                     ><i class="fa-solid fa-times-circle"></i
                   ></span>
                   {% endif %}
-                </td>
+                </td> 
                 <td>{{ contact.id }}</td>
-                <td>{{ contact.firstname }}</td>
-                <td>{{ contact.lastname }}</td>
-                <td>{{ contact.petname }}</td>
-                <td>{{ contact.petid }}</td>
+                <td>{{ contact.username }}</td>
                 <td>{{ contact.email }}</td>
                 <td>{{ contact.number }}</td>
+                <td>{{ contact.type }}</td>
+                <td>{{ contact.pname }}</td>
+                <td>{{ contact.pid }}</td>
                 <td>{{ contact.location }}</td>
                 <td>{{ contact.message }}</td>
                 
@@ -156,12 +156,12 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Pet Name</th>
-                <th>Pet id</th>
+                <th>User Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
+                <th>Type</th>
+                <th>Pet / service Name</th>
+                <th>Pet / service id</th>
                 <th>Location</th>
                 <th>Message</th>
               </tr>
@@ -175,12 +175,12 @@
                   ></span>
                 </td>
                 <td>{{ contact.id }}</td>
-                <td>{{ contact.firstname }}</td>
-                <td>{{ contact.lastname }}</td>
-                <td>{{ contact.petname }}</td>
-                <td>{{ contact.petid }}</td>
+                <td>{{ contact.username }}</td>
                 <td>{{ contact.email }}</td>
                 <td>{{ contact.number }}</td>
+                <td>{{ contact.type }}</td>
+                <td>{{ contact.pname }}</td>
+                <td>{{ contact.pid }}</td>
                 <td>{{ contact.location }}</td>
                 <td>{{ contact.message }}</td>
                 
@@ -226,12 +226,12 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Pet Name</th>
-                <th>Pet id</th>
+                <th>User Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
+                <th>Type</th>
+                <th>Pet / service Name</th>
+                <th>Pet / service id</th>
                 <th>Location</th>
                 <th>Message</th>
               </tr>
@@ -245,16 +245,16 @@
                   ></span>
                 </td>
                 <td>{{ contact.id }}</td>
-                <td>{{ contact.firstname }}</td>
-                <td>{{ contact.lastname }}</td>
-                <td>{{ contact.petname }}</td>
-                <td>{{ contact.petid }}</td>
+                <td>{{ contact.username }}</td>
                 <td>{{ contact.email }}</td>
                 <td>{{ contact.number }}</td>
+                <td>{{ contact.type }}</td>
+                <td>{{ contact.pname }}</td>
+                <td>{{ contact.pid }}</td>
                 <td>{{ contact.location }}</td>
                 <td>{{ contact.message }}</td>
                 
-                  
+
                 <td style="padding: 10px; text-align: center">
                   <label
                     style="
@@ -297,12 +297,12 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Pet Name</th>
-                <th>Pet id</th>
+                <th>User Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
+                <th>Type</th>
+                <th>Pet / service Name</th>
+                <th>Pet / service id</th>
                 <th>Location</th>
                 <th>Message</th>
               </tr>
@@ -316,12 +316,12 @@
                   ></span>
                 </td>
                 <td>{{ contact.id }}</td>
-                <td>{{ contact.firstname }}</td>
-                <td>{{ contact.lastname }}</td>
-                <td>{{ contact.petname }}</td>
-                <td>{{ contact.petid }}</td>
+                <td>{{ contact.username }}</td>
                 <td>{{ contact.email }}</td>
                 <td>{{ contact.number }}</td>
+                <td>{{ contact.type }}</td>
+                <td>{{ contact.pname }}</td>
+                <td>{{ contact.pid }}</td>
                 <td>{{ contact.location }}</td>
                 <td>{{ contact.message }}</td>
                 
@@ -403,6 +403,7 @@
   </div>
   <div>
             <form action="{% url 'update_status_letter' %}" method="POST">
+              {% csrf_token %}
             <button
               id="markreadbtn"
               class="control-btn mark-read-btn"
@@ -435,7 +436,7 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
+                <th>User Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
                 <th>Location</th>
@@ -454,7 +455,7 @@
                   {% endif %}
                 </td>
                 <td>{{ letter.id }}</td>
-                <td>{{ letter.firstname }}</td>
+                <td>{{ letter.username }}</td>
                 <td>{{ letter.email }}</td>
                 <td>{{ letter.number }}</td>
                 <td>{{ letter.location }}</td>
@@ -504,7 +505,7 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
+                <th>User Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
                 <th>Location</th>
@@ -521,7 +522,7 @@
                  
                 </td>
                 <td>{{ letter.id }}</td>
-                <td>{{ letter.firstname }}</td>
+                <td>{{ letter.username }}</td>
                 <td>{{ letter.email }}</td>
                 <td>{{ letter.number }}</td>
                 <td>{{ letter.location }}</td>
@@ -572,7 +573,7 @@
               <tr>
                 <th></th>
                 <th>ID</th>
-                <th>First Name</th>
+                <th>user Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
                 <th>Location</th>
@@ -589,7 +590,7 @@
                  
                 </td>
                 <td>{{ letter.id }}</td>
-                <td>{{ letter.firstname }}</td>
+                <td>{{ letter.username }}</td>
                 <td>{{ letter.email }}</td>
                 <td>{{ letter.number }}</td>
                 <td>{{ letter.location }}</td>
@@ -635,4 +636,157 @@
     </div>
   </div>
 </div>
+
+
+<!-- sixth  -->
+
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapse6"
+    >
+     Add Pet
+    </button>
+  </h2>
+  <div id="collapse6" class="accordion-collapse collapse">
+    <div class="accordion-body">
+
+      <form method="POST" enctype="multipart/form-data" action="{% url 'create_blog' %}" class="form">
+        {% csrf_token %}
+        
+        <label>PET ID:</label>
+        <input type="number" name="id" id="idInput" required oninput="checkID()" />
+        <div id="warningBox" style="display: none;">
+          <div class="warning-box">
+            ID already exists!
+          </div>
+        </div>
+      
+        <label style="margin-top: 20px;">PET Photo:</label>
+        <input type="file" name="photo" accept="image/*" required onchange="previewImage(event)">
+        <img id="imagePreview" class="preview" style="display:none;">
+      
+        <label>Type:</label>
+        <select name="type" id="type" required>
+          <option value="">Default</option>
+          <option value="adopt">Pet Adoption</option>
+          <option value="service">Pet Services</option>
+        </select>
+      
+        <label>PET/SERVICE NAME</label>
+        <input type="text" name="pname" required>
+      
+        <label>PET/SERVICE DESCRIPTION:</label>
+        <textarea name="heading_explanation" required></textarea>
+      
+        <div id="subheading-container"></div>
+      
+        <button type="button" class="btn" onclick="addSubheadingField()">Add Subheading</button>
+        <button type="submit" class="btn" id="submitButton">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--  seventh -->
+
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapse7"
+    >
+     delete Pet from blog
+    </button>
+  </h2>
+  <div id="collapse7" class="accordion-collapse collapse">
+    <div class="accordion-body">
+
+      <form action="{% url 'delete_blog' %}" method="POST" class="form" >
+        {% csrf_token %}
+        <label for="input2">Enter Blog ID to Delete:</label>
+        <input type="number" name="blog_id" required id="input2" oninput="checkIDdel()">
+        <div id="warningBox2" style="display: none;">
+          <div class="warning-box">
+              ID Not exists!
+          </div>
+        </div>
+        <br>
+        <button type="submit" id="submitbtn2" class=" btn btn-primary">Delete Blog</button>
+      </form> 
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function previewImage(event) {
+      let preview = document.getElementById("imagePreview");
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.style.display = "block";
+  }
+
+  function addSubheadingField() {
+      let container = document.getElementById("subheading-container");
+      let lastSubheading = container.lastElementChild;
+      
+      if (!lastSubheading || (lastSubheading.querySelector("input").value.trim() && lastSubheading.querySelector("textarea").value.trim())) {
+          let subheadingDiv = document.createElement("div");
+          subheadingDiv.classList.add("subheading-group");
+          
+          let subheading = document.createElement("input");
+          subheading.type = "text";
+          subheading.name = "subheading[]";
+          subheading.placeholder = "Subheading";
+          
+          let explanation = document.createElement("textarea");
+          explanation.name = "explanation[]";
+          explanation.placeholder = "Explanation";
+          
+          subheadingDiv.appendChild(subheading);
+          subheadingDiv.appendChild(explanation);
+          container.appendChild(subheadingDiv);
+      }
+  }
+
+  // This variable will be rendered from Django/Python as a JSON list of existing IDs
+  const existingIDs = {{ existing_ids|safe }}; 
+
+  // ✅ Function for Blog Create ID Check
+  function checkID() {
+    const inputField = document.getElementById("idInput");
+    const submitButton = document.getElementById("submitButton");
+    const warningBox = document.getElementById("warningBox");
+    const id = parseInt(inputField.value);
+
+    if (!isNaN(id) && existingIDs.includes(id)) {
+      warningBox.style.display = "inline-block";
+      submitButton.disabled = true;
+    } else {
+      warningBox.style.display = "none";
+      submitButton.disabled = false;
+    }
+  }
+
+  // ✅ Function for Blog Delete ID Check
+  function checkIDdel() {
+    const inputField2 = document.getElementById("input2");
+    const submitButton2 = document.getElementById("submitbtn2");
+    const warningBox2 = document.getElementById("warningBox2");
+    const id = parseInt(inputField2.value);
+
+    if (!isNaN(id) && existingIDs.includes(id)) {
+      warningBox2.style.display = "none";
+      submitButton2.disabled = false;
+    } else {
+      warningBox2.style.display = "inline-block";
+      submitButton2.disabled = true;
+    }
+  }
+</script>
 

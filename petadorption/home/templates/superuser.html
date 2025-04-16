@@ -18,25 +18,25 @@
       <div id="collapseOne" class="accordion-collapse collapse">
         <div class="accordion-body">
           <!--  -->
-          <form
-          class="form"
-            action="/adminregister"
-            method="post"
-            style="
-              font-size: small;
-              text-align: center;
-              max-width: 500px;
-              margin: auto;
-            "
-          >
-            <h1>ADD STAFF</h1>
+          <form action="{% url 'register'  %}" method="post" style="text-align: center;font-size: small;
+          text-align: center;
+          max-width: 500px;
+          margin: auto;" class="form">
+            {% csrf_token %}
+            <h3>Add Staff</h3>
             <div class="mb-3">
               <label class="form-label">User Name</label>
-              <input class="form-control" name="username" />
+              <input
+                class="form-control"
+                placeholder="example given"
+                name="username"
+              />  
+            <small style="color: white;">Username cannot be changed after registration.</small>
+  
             </div>
             <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">
-                Email address</label
+              <label for="exampleInputEmail1" class="form-label"
+                >Email address</label
               >
               <input
                 type="email"
@@ -44,8 +44,9 @@
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
+                placeholder="example@gmail.com"
               />
-              <div id="emailHelp" class="form-text">
+              <div id="emailHelp" class="form-text" style="color: white">
                 We'll never share your email with anyone else.
               </div>
             </div>
@@ -58,15 +59,32 @@
                 class="form-control"
                 id="exampleInputPassword1"
                 name="password"
+                placeholder="password"
               />
             </div>
-
+            <div id="strengthMessage" class="strength-message"></div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"
+                >confirm Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword2"
+                name="cpassword"
+                placeholder="confirm password"
+              />
+            </div>
+            <input
+                name="role"
+                value="staff"
+                style="display: none;"
+              />
             <!-- <select class="form-select fs-6" aria-label="Select Role of User" name="role"> -->
             <!-- <option selected>Select Role of User</option> -->
-            <!-- <option value="user">user</option> -->
-            <option value="admin">admin</option>
+            <option value="admin"  >admin</option>
             <!-- </select> -->
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" id="submitBtn1" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
@@ -162,10 +180,124 @@
       </div>
     </div>
     <!--four item -->
+    {% include "clcommon.html" %}
+
   </div>
 </div>
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/clcommon.css' %}">
 <script src="{% static 'js/clcommon.js' %}"></script>
+<script> const passwordInput = document.getElementById("exampleInputPassword1");
+  const message = document.getElementById("strengthMessage");
+  const submitBtn = document.getElementById("submitBtn1");
+
+  passwordInput.addEventListener("input", function () {
+  const value = passwordInput.value;
+  const simplePassword = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+  const simplePassword2 = /^.{9,}$/;
+
+
+  if (value.length === 0) {
+    message.textContent = "";
+    submitBtn.disabled = true;
+  } else if (simplePassword.test(value) || simplePassword2.test(value)) {
+    message.textContent = "Looks good 👍";
+    message.className = "strength-message valid";
+    submitBtn.disabled = false;
+  } else {
+    message.textContent = "At least 6 characters with a letter & number or 9 characters ";
+    message.className = "strength-message invalid";
+    submitBtn.disabled = true;
+  }
+});
+</script>
+{% endblock %}
+{% block style %}
+<style>
+  .form {
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    background: #fefeff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .form label {
+    font-weight: bold;
+    margin-top: 15px;
+    display: block;
+    color: #333;
+  }
+
+  .form input[type="text"],
+  .form input[type="number"],
+  .form input[type="file"],
+  .form select,
+  .form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 2px solid #8a2be2;
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background: #f9f8ff;
+    color: #333;
+  }
+
+  .form textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form .btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    background-color: #8a2be2;
+    color: #fff;
+  }
+
+  .form .btn:hover {
+    background-color: #6f1cd1;
+  }
+
+  .preview {
+    width: 100%;
+    max-width: 250px;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+  }
+
+  .warning-box {
+    background-color: #ffdddd;
+    border-left: 5px solid #f44336;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    color: #d8000c;
+    font-weight: bold;
+    position: relative;
+  }
+
+  .arrow-down {
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #f44336;
+  }
+</style>
+
 {% endblock %}

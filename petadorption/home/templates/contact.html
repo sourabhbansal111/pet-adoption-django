@@ -454,60 +454,28 @@
   </body>
 
   <script>
-    
-    document.addEventListener("DOMContentLoaded", function () {
-      let dropdowns = [
-        {
-          parent: document.getElementById("ser"),
-          box: document.getElementById("servicebox"),
-        },
-        {
-          parent: document.getElementById("res"),
-          box: document.getElementById("resourcesbox"),
-        },
-      ];
-
-      dropdowns.forEach(({ parent, box }) => {
-        parent.addEventListener("mouseenter", function () {
-          parent.classList.add("active-dropdown");
-        });
-
-        parent.addEventListener("mouseleave", function () {
-          setTimeout(() => {
-            if (!box.matches(":hover")) {
-              parent.classList.remove("active-dropdown");
-            }
-          }, 200);
-        });
-
-        box.addEventListener("mouseenter", function () {
-          parent.classList.add("active-dropdown");
-        });
-
-        box.addEventListener("mouseleave", function () {
-          parent.classList.remove("active-dropdown");
-        });
-      });
-    });
     function fetchPetData(value, field) {
       if (value === "") return;
-
-      $.ajax({
-        url: "/get_pet_data",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ value: value }),
-        success: function (response) {
-          if (field === "id" && response.pet_name) {
-            document.getElementById("pet-name").value = response.pet_name;
-          } else if (field === "name" && response.pet_id) {
-            document.getElementById("pet-id").value = response.pet_id;
-          }
+  
+      fetch("{% url 'get_pet_data' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
         },
-      });
+        body: JSON.stringify({ value: value, field: field }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (field === "id" && data.pet_name) {
+            document.getElementById("pet-name").value = data.pet_name;
+          } else if (field === "name" && data.pet_id) {
+            document.getElementById("pet-id").value = data.pet_id;
+          }
+        });
     }
   </script>
-
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </html>

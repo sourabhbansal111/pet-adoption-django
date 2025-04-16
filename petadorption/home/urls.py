@@ -43,8 +43,9 @@ urlpatterns = [
 
 
     # Blog
-    # path('create-blog/', views.create_blog, name='create_blog'),
-
+    path('create-blog/', views.create_blog, name='create_blog'),
+    path('delete-blog/', views.blog_delete, name='delete_blog'),
+    path('get_pet_data/', views.get_pet_data, name='get_pet_data'),
     # # Admin Contact Management
     # path('view-contacts/', views.view_contacts, name='view_contacts'),
     # path('approve-contact/<int:id>/', views.approve_contact, name='approve_contact'),
