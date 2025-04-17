@@ -58,6 +58,9 @@ urlpatterns = [
     path('puppy_play_group/', views.puppyplay,name='puppyplay'),
     path('faq/', views.faq,name='faq'),
 
+
+
+    path('orders/update/', views.update_status_order, name='update_status_order'),
     # # Admin Contact Management
     # path('view-contacts/', views.view_contacts, name='view_contacts'),
     # path('approve-contact/<int:id>/', views.approve_contact, name='approve_contact'),

@@ -35,8 +35,8 @@
                     <span>{{ cart_item.quantity }}</span>
                     <a href="{% url 'add_to_cart' cart_item.product.id %}">+</a>
                 </td>
-                <td class="price">${{ cart_item.product.price }}</td>
-                <td class="total">${{ cart_item.sub_total }}</td>
+                <td class="price">Rs.{{ cart_item.product.price }}</td>
+                <td class="total">Rs.{{ cart_item.sub_total }}</td>
                 <td class="action">
                     <a href="{% url 'full_remove' cart_item.product.id %}" class="remove-btn">Remove</a>
                 </td>
@@ -50,7 +50,7 @@
             <h3>Order Summary</h3>
             <div class="summary-row">
                 <span>Subtotal:</span>
-                <span>${{ total }}</span>
+                <span>Rs.{{ total }}</span>
             </div>
             <div class="summary-row">
                 <span>Shipping:</span>
@@ -58,13 +58,18 @@
             </div>
             <div class="summary-row total">
                 <span>Total:</span>
-                <span>${{ total }}</span>
+                <span>Rs.{{ total }}</span>
             </div>
+            {% if user.is_authenticated and not user.is_verified %}
+                <p style="color: red; margin-top: 5px;">Please verify your email to proceed with checkout.</p>
+            {% endif %}
+
             <form action="{% url 'checkout' %}" method="post" style="display: inline;">
                 {% csrf_token %}
-                <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+                <button type="submit" class="checkout-btn"{% if not user.is_authenticated or not user.is_verified %}disabled style="cursor: not-allowed; opacity: 0.6;"{% endif %}>
+                    Proceed to Checkout</button>
             </form>
-                    </div>
+            </div>
     </div>
     {% else %}
     <div class="empty-cart">

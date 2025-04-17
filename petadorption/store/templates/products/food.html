@@ -29,14 +29,14 @@
         <div class="products" id="products-list">
             {% for product in products %}
             <div class="product">
-                <a href="{{ product.get_absolute_url }}">
+                <a href="{%  url 'product_detail' id=product.id  slug=product.slug  %}">
                     <div class="product-img">   
                         <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/no_image.png' %}{% endif %}" alt="{{ product.name }}">
                     </div>
                 </a>
                 <div class="product-info">
                     <h3 class="product-title">{{ product.name }}</h3>
-                    <p class="product-price">${{ product.price }}</p>
+                    <p class="product-price">Rs.{{ product.price }}</p>
                     <form action="{% url 'add_to_cart' product.id %}" method="post" class="add-to-cart-form">
                         {% csrf_token %}
                         <button type="submit" class="add-to-cart">Add to Cart</button>
@@ -44,6 +44,7 @@
                 </div>
             </div>
             {% endfor %}
+
         </div>
     </div>
 </section>
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to show notification
     function showNotification(message, type) {
         const notification = document.createElement('div');
-        notification.className = `cart-notification ${type}`;
+        notification.className = `cart-notification Rs.{type}`;
         notification.textContent = message;
         document.body.appendChild(notification);
         
@@ -132,12 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
     right: 20px;
     padding: 15px 25px;
     border-radius: 4px;
-    color: white;
+    color: rgb(255, 255, 255);
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     animation: slideIn 0.3s ease-out;
     transform: translateY(0);
     opacity: 1;
+    background-color: green;
 }
 
 .cart-notification.success {

@@ -6,8 +6,12 @@ from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 import random
-# Create your views here.
+from django.core.mail import send_mail
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+# Create your views here.
+@login_required
 def _cart_id(request):
     if not request.session.session_key:
         request.session.create()
@@ -34,10 +38,11 @@ def add_to_cart(request, product_id):
         )
         cart_item.save()
     
-    
+    messages.success(request,"Added to cart")
     # Get the referring page URL or default to product list
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/products/'))
 
+@login_required
 def cart_detail(request, total=0, counter=0, cart_items=None):
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -51,6 +56,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     return render(request, 'cart/cart_detail.html', 
                  {'cart_items': cart_items, 'total': total, 'counter': counter})
 
+@login_required
 def remove_from_cart(request, product_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
@@ -63,6 +69,7 @@ def remove_from_cart(request, product_id):
         cart_item.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/cart/'))
 
+@login_required
 def full_remove(request, product_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
@@ -72,6 +79,7 @@ def full_remove(request, product_id):
 
 # views.py
 
+@login_required
 def checkout(request):
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -110,7 +118,38 @@ def checkout(request):
             # Store in session for thank you page
             request.session['order_number'] = order.order_number
             request.session['order_total'] = str(total1)
+            order_items_summary = "\n".join([
+    f"{item.quantity} × {item.product.name} — ${item.price:.2f}" for item in order.items.all()
+])
 
+            email_subject = f"Thank You for Your Order – {order.order_number}"
+            email_body = f"""
+Hi {order.name},
+
+Thank you for shopping with us! 💖 We're excited to let you know that we've received your order {order.order_number} placed on {order.created.strftime('%B %d, %Y')}.
+
+🛍️ Order Summary:
+{order_items_summary}
+
+Total: ${order.total:.2f}
+
+We'll begin preparing your order right away and send you another email once it ships.
+Estimated delivery: 3–5 business days 🚚
+
+If you have any questions, feel free to reply to this email.
+We're always here to help. 💌
+
+With love,  
+Your Friendly Store Team  
+YourStoreName.com
+"""
+            send_mail(
+                subject=email_subject,
+                message=email_body,
+                from_email='parkspaws.petcare@gmail.com',
+                recipient_list=[request.user.email],
+                fail_silently=False,
+            )
             cart_items.delete()
             return redirect('thank_you')
 
@@ -121,6 +160,7 @@ def checkout(request):
         return redirect('cart_detail')
 
 
+@login_required
 def thank_you(request):
     order_number = request.session.get('order_number', 'ORD-000000')
     order_total = request.session.get('order_total', '0.00')
@@ -134,13 +174,14 @@ def thank_you(request):
 
 
 def my_orders(request):
-    orders = Order.objects.all().order_by('-created')
+    orders = Order.objects.filter(name=request.user.username).order_by('-created')
     return render(request, 'cart/my_orders.html', {'orders': orders})
 
 
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
 
+@login_required
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -156,6 +197,7 @@ def product_list(request, category_slug=None):
         'products': products
     })
 
+@login_required
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     return render(request, 'products/detail.html', {'product': product})

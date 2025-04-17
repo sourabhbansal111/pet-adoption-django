@@ -363,18 +363,22 @@
         <hr />
         <div>
           <h1>Services</h1>
-          <h3>Grooming</h3>
-          <h3>Doggy Day Camp</h3>
-          <h3>Puppy Play Group</h3>
-          <h3>Training</h3>
-          <h3>Vet Clinics</h3>
+          <h3><a href="{% url 'product_list' %}">BUY PET FOOD</a></h3>
+          <h3><a href="{% url 'doggydaycamp' %}">DOGGY DAY CAMP</a></h3>
+          <h3><a href="{% url 'puppyplay' %}">PUPPY PLAY GROUP</a></h3>
         </div>
         <hr />
         <div>
           <h1>Resources</h1>
-          <h3>Vaccine & Health Requirements</h3>
-          <h3>Doggy Day Camp - Know Before You Go</h3>
-          <h3>FAQ</h3>
+          <h3><a href="{% url 'boarding' %}">BOARDING</a></h3>
+          <h3><a href="{% url 'faq' %}">FAQ</a></h3>
+          <h3><a href="{% url 'grooming' %}">GROOMING</a></h3>
+        </div>
+        <hr>
+        <div>
+          <h1>Blog</h1>
+          <h3><a href="{% url 'blog' blog='adopt' %}">PET ADOPTION</a></h3>
+          <h3><a href="{% url 'blog' blog='service' %}">PET SERVICES</a></h3>
         </div>
         <hr />
         <div class="footer-form">

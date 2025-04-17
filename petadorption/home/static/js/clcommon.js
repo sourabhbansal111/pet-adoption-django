@@ -73,3 +73,28 @@ selectionBoxesl.forEach((box) => {
   box.addEventListener("change", updatereadButtonState);
 });
 
+const selectionBoxeso = document.querySelectorAll(".selection-checkbox-order");
+const markcompletebtn = document.getElementById("markcompletebtn");
+const delobtn = document.getElementById("delobtn");
+
+function updateOrderButtonState() {
+  const isCheckedo = Array.from(selectionBoxeso).some(
+    (checkbox) => checkbox.checked
+  );
+  if (isCheckedo) {
+    markcompletebtn.classList.add("enabled");
+    markcompletebtn.disabled = false;
+    delobtn.classList.add("enabled");
+    delobtn.disabled = false;
+  } else {
+    markcompletebtn.classList.remove("enabled");
+    markcompletebtn.disabled = true;
+    delobtn.classList.remove("enabled");
+    delobtn.disabled = true;
+  }
+}
+
+selectionBoxeso.forEach((box) => {
+  box.addEventListener("change", updateOrderButtonState);
+});
+

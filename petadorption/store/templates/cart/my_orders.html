@@ -8,7 +8,7 @@
     <div class="container">
         <h1>Premium Nutrition for Your Beloved Pets</h1>
         <p>Explore our selection of nutritious and tasty food for dogs and cats.</p>
-        <a href="#products" class="btn">Shop Now</a>
+        <a href="{% url 'product_list' %}" class="btn">Shop Now</a>
     </div>
 </section>
  
@@ -18,26 +18,38 @@
 
     <div class="container">
         <h2 class="section-title">My Orders</h2>
-        {% for order in orders %}
-        <div class="order-container">
-            <div class="order-header">Order #{{ order.order_number }}</div>
-            <div class="order-details">
-                <p><strong>Name:</strong> {{ order.name }}</p>
-                <p><strong>Email:</strong> {{ order.email }}</p>
-                <p><strong>Date:</strong> {{ order.created|date:"F d, Y - H:i" }}</p>
-                <p class="total"><strong>Total:</strong> ${{ order.total }}</p>
+        
+        <div class="orders-grid">
+            {% for order in orders %}
+            <div class="order-container">
+                <div class="order-content">
+                    <div>
+                        <div class="order-header">Order #{{ order.order_number }}</div>
+                        <div class="order-details">
+                            <p><strong>Name:</strong> {{ order.name }}</p>
+                            <p><strong>Email:</strong> {{ order.email }}</p>
+                            <p><strong>Date:</strong> {{ order.created|date:"F d, Y - H:i" }}</p>
+                            <p class="total"><strong>Total:</strong> Rs.{{ order.total }}</p>
+                        </div>
+                        <div class="order-items">
+                            <p><strong>Items:</strong></p>
+                            {% for item in order.items.all %}
+                            <div class="item">- {{ item.product.name }} (x{{ item.quantity }}) - Rs.{{ item.price }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% if order.status == "Completed" %}
+                        <img src="{% static 'images/complete.png' %}" alt="completed" class="tick-image"> 
+                    {% else %}
+                        <img src="{% static 'images/pending.png' %}" alt="pending" class="tick-image"> 
+                    {% endif %}
+                </div>
             </div>
-            <div class="order-items">
-                <p><strong>Items:</strong></p>
-                {% for item in order.items.all %}
-                <div class="item">- {{ item.product.name }} (x{{ item.quantity }}) - ${{ item.price }}</div>
-                {% endfor %}
-            </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>You have no orders yet 😢</p>
-        {% endfor %}
     </div>
+    
+    
 </section>
 
 {% endblock %}
@@ -132,7 +144,73 @@
             color: #008000;
         }
         </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+    }
+    .container {
+        padding: 30px;
+    }
+    .order-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    .order-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .order-header {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    .order-details {
+        margin-bottom: 10px;
+    }
+    .order-items {
+        margin-left: 20px;
+    }
+    .item {
+        margin-bottom: 5px;
+    }
+    .total {
+        font-weight: bold;
+        color: #008000;
+    }
+ 
+    .orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
 
+.order-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.order-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tick-image {
+    width: 100px;
+    height: 100px;
+    margin-left: 30px;
+}
+
+</style>
 
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock %}  

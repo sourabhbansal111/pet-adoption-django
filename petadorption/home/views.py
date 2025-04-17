@@ -565,6 +565,12 @@ def staff_view(request):
         any(letter.status=="Viewed" for letter in Letter.objects.all()),       # Condition 4
         any(letter.status=="Not Viewed" for letter in Letter.objects.all())    # Condition 5
         ]
+        orders={
+            "total":Order.objects.all(),
+            "completed": Order.objects.filter(status="Completed"),
+            "pending":Order.objects.filter(status="Pending")
+        }
+       
 
         return render(request, "staff.html", {
             "admins": admins,
@@ -573,7 +579,8 @@ def staff_view(request):
             "letters": letters,
             "cards": cards,
             "existing_ids": existing_ids,
-            "co":conditions
+            "co":conditions,
+            "orders": orders,
         })
     else:
         return redirect('lofin')
@@ -595,6 +602,13 @@ def admin_view(request):
         any(letter.status=="Viewed" for letter in Letter.objects.all()),       # Condition 4
         any(letter.status=="Not Viewed" for letter in Letter.objects.all())    # Condition 5
         ]
+    
+        orders=[
+            Order.objects.all(),
+            Order.objects.filter(status="Completed"),
+            Order.objects.filter(status="Pending")
+        ]
+   
 
         return render(request, "superuser.html", {
             "admins": admins,
@@ -603,7 +617,8 @@ def admin_view(request):
             "letters": letters,
             "cards": cards,
             "existing_ids": existing_ids,
-            "co":conditions
+            "co":conditions,
+            "orders": orders,
         })
     else:
         return redirect('login')
@@ -780,6 +795,47 @@ def faq(request):
     return render(request , 'faq.html')
 
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from store.models import Order
+
+def order_dashboard(request):
+    tab = request.GET.get('tab', 'all')
+    
+    if tab == 'completed':
+        orders = Order.objects.filter(status="Completed")
+    elif tab == 'pending':
+        orders = Order.objects.filter(status="Pending")
+    else:
+        orders = Order.objects.all()
+
+    count = {
+        "total": Order.objects.count(),
+        "completed": Order.objects.filter(status="Completed").count(),
+        "pending": Order.objects.filter(status="Pending").count(),
+    }
+
+    return render(request, 'staff', {
+        "orders": orders,
+        "count": count,
+        "active_tab": tab
+    })
+
+def update_status_order(request):
+    if request.method == 'POST':
+        ids = request.POST.getlist('ord_ids')
+        status = request.POST.get('status')
+        referer_url = request.META.get('HTTP_REFERER', None)
+        if status == 'Completed':
+            Order.objects.filter(id__in=ids).update(status='Completed')
+            messages.success(request, "Selected orders marked as Completed.")
+        elif status == 'del':
+            Order.objects.filter(id__in=ids).delete()
+            messages.success(request, "Selected orders deleted.")
+        if referer_url:
+            return redirect(referer_url)  # Redirect to the referer (previous page)
+        else:
+            return redirect('staff')
 
 
 

@@ -637,6 +637,183 @@
   </div>
 </div>
 
+<div class="accordion-item">
+  <h2 class="accordion-header">
+    <button
+      class="accordion-button collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapseOrders"
+    >
+     Orders
+    </button>
+  </h2>
+<div id="collapseOrders" class="accordion-collapse collapse">
+  <div class="accordion-body">
+    <div class="letter-button-container">
+      <div>
+        <button class="bnl" type="button" onclick="showLetterSection('orderAll')">All</button>
+        <button class="bnl" type="button" onclick="showLetterSection('orderCompleted')">Completed</button>
+        <button class="bnl" type="button" onclick="showLetterSection('orderPending')">Pending</button>
+      </div>
+
+      <div>
+        <form action="{% url 'update_status_order' %}" method="POST">
+          {% csrf_token %}
+          <button
+  id="markcompletebtn"
+  class="control-btn mark-read-btn"
+  type="submit"
+  name="status"
+  value="Completed"
+  disabled
+>
+            Mark as Completed
+          </button>
+          <button
+  id="delobtn"
+  class="control-btn dell-btn"
+  type="submit"
+  value="del"
+  name="status"
+  disabled
+>
+            Delete
+          </button>
+      </div>
+    </div>
+
+    <!-- All Orders -->
+    <div id="orderAll" class="letter-content-box active">
+      {% if orders.0 %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Order No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Total</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders.0 %}
+          <tr>
+          
+              <td>
+                {% if order.status == "Pending" %}
+                <div class="empty-box"></div>
+                {% else %}
+                <div class="checked-box"></div>
+                {% endif %}
+              
+            </td>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.email }}</td>
+            <td>${{ order.total }}</td>
+            <td>{{ order.created }}</td>
+            <td>{{ order.status }}</td>
+            <td style="padding: 10px; text-align: center">
+              <label style="display:inline-block; width:24px; height:24px; cursor:pointer;">
+                <input type="checkbox" class="selection-checkbox-order" name="ord_ids" value="{{ order.id }}"
+                  style="width:20px; height:20px; cursor:pointer; position:relative;" />
+              </label>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h2>NO ORDERS</h2>
+      {% endif %}
+    </div>
+
+    <!-- Completed Orders -->
+    <div id="orderCompleted" class="letter-content-box">
+      {% if orders.0 %}
+      {% if orders.1 %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Order No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Total</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders.1 %}
+          <tr>
+            <td><div class="checked-box"></div></td>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.email }}</td>
+            <td>${{ order.total }}</td>
+            <td>{{ order.created }}</td>
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h2>NO COMPLETED ORDERS</h2>
+      {% endif %}
+      {% else %}
+      <h2>NO ORDERS</h2>
+      {% endif %}
+    </div>
+
+    <!-- Pending Orders -->
+    <div id="orderPending" class="letter-content-box">
+      {% if orders.0 %}
+      {% if orders.2 %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Order No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Total</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders.2 %}
+          <tr>
+            <td><div class="empty-box"></div></td>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.name }}</td>
+            <td>{{ order.email }}</td>
+            <td>${{ order.total }}</td>
+            <td>{{ order.created }}</td>
+            <td style="padding: 10px; text-align: center">
+              <input type="checkbox" class="selection-checkbox-order" name="ord_ids" value="{{ order.id }}"
+                style="width:20px; height:20px;" />
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h2>NO PENDING ORDERS</h2>
+      {% endif %}
+      {% else %}
+      <h2>NO ORDERS</h2>
+      {% endif %}
+    </div>
+    </form>
+  </div>
+</div>
+</div>
+
 
 <!-- sixth  -->
 
