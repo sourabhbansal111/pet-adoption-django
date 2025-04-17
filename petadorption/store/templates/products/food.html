@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section id="home" class="hero" style="margin-top: 60px;">
+    <div class="container">
+        <h1>Premium Nutrition for Your Beloved Pets</h1>
+        <p>Explore our selection of nutritious and tasty food for dogs and cats.</p>
+        <a href="#products" class="btn">Shop Now</a>
+    </div>
+</section>
+ 
+<section id="products" class="section">
+    <a href="{% url 'cart_detail' %}" class="btn-cart" style="position: absolute; right: 150px;">Cart</a>
+    <a href="{% url 'my_orders' %}" class="btn-cart" style="position: absolute; right: 260px;">Orders</a>
+
+    <div class="container">
+        <h2 class="section-title">Our Products</h2>
+        <div class="categories">
+            <div class="category {% if not category %}active{% endif %}" data-category="all">
+                <a href="{% url 'product_list' %}" style="text-decoration: none; color: black; font-weight: 700;">All Products</a>
+            </div>
+            {% for c in categories %}
+            <div class="category {% if category.slug == c.slug %}active{% endif %}" data-category="{{ c.slug }}">
+                <a href="{% url 'product_list_by_category' c.slug %}" style="text-decoration: none; color: black; font-weight: 700;">{{ c.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="products" id="products-list">
+            {% for product in products %}
+            <div class="product">
+                <a href="{{ product.get_absolute_url }}">
+                    <div class="product-img">   
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/no_image.png' %}{% endif %}" alt="{{ product.name }}">
+                    </div>
+                </a>
+                <div class="product-info">
+                    <h3 class="product-title">{{ product.name }}</h3>
+                    <p class="product-price">${{ product.price }}</p>
+                    <form action="{% url 'add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="add-to-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle add to cart forms
+    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
+    
+    addToCartForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = this.querySelector('.add-to-cart');
+            const originalText = button.textContent;
+            
+            // Change button text to indicate loading
+            button.textContent = 'Adding...';
+            button.disabled = true;
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': this.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new FormData(this)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Show success notification
+                    showNotification('Added to cart!', 'success');
+                    
+                    // Optionally update cart counter if you have one
+                    updateCartCounter();
+                } else {
+                    showNotification('Failed to add to cart', 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error occurred', 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                button.textContent = originalText;
+                button.disabled = false;
+            });
+        });
+    });
+    
+    // Function to show notification
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `cart-notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 2000);
+    }
+    
+    // Function to update cart counter (if you have one)
+    function updateCartCounter() {
+        // If you have a cart counter element, you would fetch the updated count here
+        // Example:
+        // fetch('/cart/count/')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         document.querySelector('.cart-counter').textContent = data.count;
+        //     });
+    }
+});
+</script>
+
+{% endblock %}
+{% block style %}
+<style>
+/* Add these styles to your existing CSS */
+.cart-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 4px;
+    color: white;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease-out;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.cart-notification.success {
+    background-color: #4CAF50;
+}
+
+.cart-notification.error {
+    background-color: #F44336;
+}
+
+.cart-notification.fade-out {
+    animation: fadeOut 0.3s ease-out;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+}
+
+/* Style for loading state */
+.add-to-cart[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+</style>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}  
