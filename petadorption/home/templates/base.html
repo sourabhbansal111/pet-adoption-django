@@ -163,15 +163,15 @@
       .dropdown1 {
         width: 250px;
         top: 100%;
-        left: 48.7%;
+        left: 45.5%;
       }
       .dropdown2 {
         top: 100%;
-        left: 55.4%;
+        left: 52.1%;
       }
       .dropdown3 {
         top: 100%;
-        left: 74.7%;
+        left: 77.9%;
       }
       .dropdown a {
         display: block;
@@ -368,7 +368,7 @@
       <div class="content">
         <img src="/static/images/logo.jpg" alt="Park's Paws Logo" />
         <h1 class="clo" style="color: white;">Plan your visit, we'd love to meet your pet.</h1>
-        <a class="clo" id="clo" href="/admin/">Book a Meet & Greet + Tour</a>
+        <a class="clo" id="clo" href="">Book a Meet & Greet + Tour</a>
         
 
         {% if user.username %}
@@ -416,20 +416,21 @@
         <a class="has-dropdown1 has-dropdown" id="ser">SERVICES</a>
         <!-- <div id="a"  class="has-dropdown"> -->
         <div id="servicebox" class="dropdown1 dropdown">
-          <a href="{% url 'product_list' %}">BUY PET FOOD</a>
           <a href="{% url 'doggydaycamp' %}">DOGGY DAY CAMP</a>
           <a href="{% url 'puppyplay' %}">PUPPY PLAY GROUP</a>
           
         <!-- </div> -->
       </div>
+      
       <a class="has-dropdown2 has-dropdown" id="res">RESOURCES</a>
       <!-- <div class="has-dropdown"> -->
         <div id="resourcesbox" class="dropdown2 dropdown">
           <a href="{% url 'boarding' %}">BOARDING</a>
           <a href="{% url 'grooming' %}">GROOMING</a>
           <a href="{% url 'faq' %}">FAQ</a>
-          <!-- </div> -->
-        </div>
+        <!-- </div> -->
+      </div>
+      <a href="{% url 'product_list' %}">SHOP</a>
         <!-- <a href="">PETCAMS</a> -->
         <a href="{% url 'contact' %}">CONTACT</a>
 

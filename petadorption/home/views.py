@@ -308,22 +308,27 @@ def change_password_view(request):
 
 def forgot_password_view(request):
     if request.method == 'POST':
-        if request.POST.get('email'):
-            email = request.POST.get['email']
-        else:
-            email = request.user.email
+        email = request.POST.get('email')
+        if not email:
+            if request.user.is_authenticated:
+                email = request.user.email
+            else:
+                messages.error(request, 'Please enter your email.')
+                return redirect(request.META.get('HTTP_REFERER', 'login'))
+
         try:
             user = Usert.objects.get(email=email)
             otp = str(random.randint(100000, 999999))
             request.session['reset_email'] = email
             request.session['reset_otp'] = otp
+
             # send mail
             send_mail(
-                subject = "Your PetCare Email Verification Code",
-                message = f"""
+                subject="Your PetCare Email Verification Code",
+                message=f"""
 Hi {user.username},
 
-We received a request to Change password for your PetCare account.
+We received a request to change the password for your PetCare account.
 
 Your one-time verification code is: {otp}
 
@@ -335,22 +340,110 @@ Thanks,
 The PetCare Team  
 https://www.petcare.com
 
-PetCare Inc. | 123 Paw Street | New York, NY 10001  
-""",
+PetCare Inc. | 123 Paw Street | New York, NY 10001
+""",  # plain text fallback
 
                 from_email='parkspaws.petcare@gmail.com',
                 recipient_list=[email],
+                html_message=f"""
+<html>
+  <body style="font-family: Arial, sans-serif; color: #333;">
+    <p>Hi {user.username},</p>
+    <p>We received a request to change the password for your PetCare account.</p>
+    <p>Your one-time verification code is:</p>
+    <p style="font-size: 24px; font-weight: bold; color: #2c7be5;">{otp}</p>
+    <p>Please enter this code on the PetCare website or app to complete your verification. This code will expire in 10 minutes. For your security, do not share this code with anyone.</p>
+    <p>If you didn’t request this, you can safely ignore this email.</p>
+    <br>
+    <p>Thanks,<br>The PetCare Team</p>
+    <p><a href="https://www.petcare.com">https://www.petcare.com</a></p>
+    <footer style="font-size: 12px; color: #888;">
+      <p>PetCare Inc. | 123 Paw Street | New York, NY 10001</p>
+    </footer>
+  </body>
+</html>
+""",
                 fail_silently=False,
             )
+
             messages.success(request, 'OTP sent to your email.')
             request.session['otp_sent'] = True
             return redirect('verify_otp')
+
         except Usert.DoesNotExist:
             messages.error(request, 'Email not registered.')
+
+    return render(request, 'forgot_password.html')
+def forgot_password_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if not email:
+            if request.user.is_authenticated:
+                email = request.user.email
+            else:
+                messages.error(request, 'Please enter your email.')
+                return redirect(request.META.get('HTTP_REFERER', 'forgot_password'))
+
+        try:
+            user = Usert.objects.get(email=email)
+            otp = str(random.randint(100000, 999999))
+            request.session['reset_email'] = email
+            request.session['reset_otp'] = otp
+
+            # send mail
+            send_mail(
+                subject="Your PetCare Email Verification Code",
+                message=f"""
+Hi {user.username},
+
+We received a request to change the password for your PetCare account.
+
+Your one-time verification code is: {otp}
+
+Please enter this code on the PetCare website or app to complete your verification. This code will expire in 10 minutes. For your security, do not share this code with anyone.
+
+If you didn’t request this, you can safely ignore this email.
+
+Thanks,  
+The PetCare Team  
+https://www.petcare.com
+
+PetCare Inc. | 123 Paw Street | New York, NY 10001
+""",  # plain text fallback
+
+                from_email='parkspaws.petcare@gmail.com',
+                recipient_list=[email],
+                html_message=f"""
+<html>
+  <body style="font-family: Arial, sans-serif; color: #333;">
+    <p>Hi {user.username},</p>
+    <p>We received a request to change the password for your PetCare account.</p>
+    <p>Your one-time verification code is:</p>
+    <p style="font-size: 24px; font-weight: bold; color: #2c7be5;">{otp}</p>
+    <p>Please enter this code on the PetCare website or app to complete your verification. This code will expire in 10 minutes. For your security, do not share this code with anyone.</p>
+    <p>If you didn’t request this, you can safely ignore this email.</p>
+    <br>
+    <p>Thanks,<br>The PetCare Team</p>
+    <p><a href="https://www.petcare.com">https://www.petcare.com</a></p>
+    <footer style="font-size: 12px; color: #888;">
+      <p>PetCare Inc. | 123 Paw Street | New York, NY 10001</p>
+    </footer>
+  </body>
+</html>
+""",
+                fail_silently=False,
+            )
+
+            messages.success(request, 'OTP sent to your email.')
+            request.session['otp_sent'] = True
+            return redirect('verify_otp',email=email)
+
+        except Usert.DoesNotExist:
+            messages.error(request, 'Email not registered.')
+
     return render(request, 'forgot_password.html')
 
-
-def verify_otp_view(request):
+def verify_otp_view(request,email):
     if request.method == 'POST':
         entered_otp = ''.join([request.POST.get(f'digit{i}', '') for i in range(1, 7)])
 
@@ -362,7 +455,7 @@ def verify_otp_view(request):
         else:
             messages.error(request, 'Incorrect OTP.')
     if request.session.get('otp_sent'):
-        return render(request, 'verify_otp.html')
+        return render(request, 'verify_otp.html',{"email":email})
     else:
         raise Http404("You're not allowed to access this page.")
      

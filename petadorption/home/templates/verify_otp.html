@@ -12,6 +12,8 @@
   <form method="post" id="resend-form" action="{% url 'forgot_password' %}">
     {% csrf_token %}
     <input type="hidden" name="send_otp" value="1" />
+    <input type="hidden" name="email" value="{{ email }}">
+  
     <button style="display: none;" type="submit" id="resend-btn" disabled>Resend OTP</button>
   </form>
   <div class="timer-text">
