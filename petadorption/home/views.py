@@ -150,6 +150,24 @@ PetCare Inc. | 123 Paw Street | New York, NY 10001
 
                 from_email='parkspaws.petcare@gmail.com',
                 recipient_list=[request.user.email],
+                 html_message=f"""
+<html>
+  <body style="font-family: Arial, sans-serif; color: #333;">
+    <p>Hi { request.user.username },</p>
+    <p>We received a request to change the password for your PetCare account.</p>
+    <p>Your one-time verification code is:</p>
+    <p style="font-size: 24px; font-weight: bold; color: #2c7be5;">{otp}</p>
+    <p>Please enter this code on the PetCare website or app to complete your verification. This code will expire in 10 minutes. For your security, do not share this code with anyone.</p>
+    <p>If you didn’t request this, you can safely ignore this email.</p>
+    <br>
+    <p>Thanks,<br>The PetCare Team</p>
+    <p><a href="https://www.petcare.com">https://www.petcare.com</a></p>
+    <footer style="font-size: 12px; color: #888;">
+      <p>PetCare Inc. | 123 Paw Street | New York, NY 10001</p>
+    </footer>
+  </body>
+</html>
+""",
                 fail_silently=False,
             )
 
@@ -755,25 +773,27 @@ def update_status(request):
                     entry.delete()
         else:
             for contact_id in con_ids:
-                cont = Contact.objects.filter(id=contact_id)
+                cont = Contact.objects.filter(id=contact_id).first()
                 Contact.objects.filter(id=contact_id).update(status=status)
-                if status=="acepted":
+                print(cont.username)
+                if status=="accepted":
                     send_mail(
-                            subject = "Your PetCare Email Verification Code",
+                            subject = "🎉 Your PetCare Request Has Been Accepted!",
                             message = f"""
 Hi {cont.username},
 
 Great news! Your recent request has been **accepted** ✅
 
-We’re happy to inform you that everything has been reviewed and approved successfully. If you have any questions or need further assistance, feel free to reach out.
+We are pleased to inform you that your recent request for {cont.type} regarding your pet, {cont.pname}, has been successfully accepted. Your dedication and patience throughout this process are greatly appreciated.
 
-Thanks for being a part of PetCare 🐾
+Our records show that this request was submitted by {cont.username} ({cont.email}), and the current status of your request has been updated to **{cont.status}**. We are excited to continue supporting you and your pet as we move forward.
+
+If you have any questions or need additional assistance, please do not hesitate to contact us.
 
 Warm regards,  
+{cont.last_updated_by}  
 The PetCare Team  
 https://www.petcare.com
-
-PetCare Inc. | 123 Paw Street | New York, NY 10001
 """,
                     
 
@@ -783,22 +803,22 @@ PetCare Inc. | 123 Paw Street | New York, NY 10001
                         )
                 else:
                     send_mail(
-                            subject = "Your PetCare Email Verification Code",
+                            subject = "⚠️ Update on Your PetCare Request",
                             message = f"""
 Hi {cont.username},
 
 We wanted to let you know that your recent request has been **declined** ❌
 
-This could be due to missing information or something not meeting our current requirements. You’re welcome to reach out for more details or reapply with the necessary changes.
+We regret to inform you that your recent request for {cont.type} regarding your pet, {cont.pname}, has not been approved and is now marked as **declined**. The request was submitted by {cont.username} ({cont.email}), and we have reviewed the details thoroughly.
 
-Thanks for understanding and being a valued part of PetCare 🐾
+While we understand this may be disappointing, we encourage you to reach out to us for more information or clarification regarding the reasons behind this decision. You may also consider reapplying with the necessary adjustments.
 
-Warm regards,
+Thank you for your understanding, and we appreciate your continued interest in PetCare.
+
+Sincerely,  
 {cont.last_updated_by}  
 The PetCare Team  
 https://www.petcare.com
-
-PetCare Inc. | 123 Paw Street | New York, NY 10001
 """,
                     
 
